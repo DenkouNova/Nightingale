@@ -1,6 +1,6 @@
 ﻿namespace Nightingale
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -44,13 +44,13 @@
             // 
             // btnCreateStudyDictionary
             // 
-            this.btnCreateStudyDictionary.Location = new System.Drawing.Point(120, 315);
+            this.btnCreateStudyDictionary.Location = new System.Drawing.Point(120, 311);
             this.btnCreateStudyDictionary.Name = "btnCreateStudyDictionary";
-            this.btnCreateStudyDictionary.Size = new System.Drawing.Size(124, 43);
+            this.btnCreateStudyDictionary.Size = new System.Drawing.Size(159, 47);
             this.btnCreateStudyDictionary.TabIndex = 1;
-            this.btnCreateStudyDictionary.Text = "button2";
+            this.btnCreateStudyDictionary.Text = "Create study dictionary";
             this.btnCreateStudyDictionary.UseVisualStyleBackColor = true;
-            this.btnCreateStudyDictionary.Click += new System.EventHandler(this.button2_Click);
+            this.btnCreateStudyDictionary.Click += new System.EventHandler(this.btnCreateStudyDictionary_Click);
             // 
             // Form1
             // 
@@ -61,6 +61,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
 
         }

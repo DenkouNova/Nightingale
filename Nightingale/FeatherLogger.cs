@@ -90,7 +90,7 @@ namespace Nightingale
 
         }
 
-        public void WriteLastLine(bool error = false)
+        private void WriteLastLine(bool error = false)
         {
             if (TraceLevel > FeatherLoggerTraceLevel.Nothing)
             {
@@ -148,12 +148,23 @@ namespace Nightingale
             return s;
         }
 
+        // TODO UNTESTED
+        public string CloseSectionWithReturnInfo(string s, string location)
+        {
+            var returnString = WrapWithReturn(s);
+            Info(returnString);
+            CloseSection(location);
+            return s;
+        }
+
+        // TODO UNTESTED
         public void OpenSection(string s)
         {
             WriteOneLine("<" + s + "> " + GenerateTimestamp());
             _currentTabLevel ++;
         }
 
+        // TODO UNTESTED
         public void CloseSection(string s)
         {
             _currentTabLevel --;
@@ -185,22 +196,23 @@ namespace Nightingale
             } 
         }
 
-        public void LogDump(bool error = false)
+        public void FinishLogging(bool error = false)
         {
-            if (LogMode != FeatherLoggerLogMode.LogDump)
-            {
-                throw new InvalidOperationException("FeatherLogger.LogDump can only be used when LogMode == " + FeatherLoggerLogMode.LogDump);
-            }
-
             WriteLastLine();
 
-            CreateFolderForLogFileIfDoesntExist();
-            File.WriteAllText(this.FullPath, _allText.ToString(), Encoding.UTF8);
+            if (LogMode == FeatherLoggerLogMode.LogDump)
+            {
+                CreateFolderForLogFileIfDoesntExist();
+                File.WriteAllText(this.FullPath, _allText.ToString(), Encoding.UTF8);
+            }
         }
 
 
 
-
+        private string WrapWithReturn(string s)
+        {
+            return "Returns: '" + s + "'";
+        }
 
         private string GenerateTimestamp()
         {

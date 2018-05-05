@@ -12,6 +12,7 @@ namespace NightingaleUnitTests
     public class GivenAFeatherLogger
     {
         private string _testFolder;
+        private string _loggerFileExtension;
 
         private const string TEST_ERROR_STRING = "652752256 error";
         private const string TEST_WARN_STRING = "1652478764 warn";
@@ -24,16 +25,9 @@ namespace NightingaleUnitTests
         {
             _testFolder =
                 Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            _loggerFileExtension = UnitTestHelpers.TEST_LOGGER_EXTENSION;
 
-            foreach (var oneFile in Directory.GetFiles(_testFolder, "*.unittest.txt"))
-            {
-                File.Delete(oneFile);
-            }
-
-            foreach(var oneDir in Directory.GetDirectories(_testFolder))
-            {
-                Directory.Delete(oneDir, recursive: true);
-            }
+            UnitTestHelpers.DeleteTestFiles(_testFolder);
         }
 
         [Test]
@@ -48,7 +42,7 @@ namespace NightingaleUnitTests
                 folderName: _testFolder + @"\LogMode" + "_" + logMode,
                 filename: "log",
                 hasTimestampInFilename: true,
-                extension: "unittest.txt");
+                extension: _loggerFileExtension);
 
             var directoryExists = Directory.Exists(logger.FolderName);
             var fileExists = File.Exists(logger.FullPath);
@@ -71,15 +65,15 @@ namespace NightingaleUnitTests
             var logger = new FeatherLogger(
                 logMode: FeatherLoggerLogMode.LogAsYouGo,
                 traceLevel: FeatherLoggerTraceLevel.Error,
-                folderName: null, // defaults to _testFolder
+                folderName: null, // defaults to the value of _testFolder
                 filename: "log",
                 hasTimestampInFilename: false,
-                extension: "unittest.txt");
+                extension: _loggerFileExtension);
 
             var directoryExists = Directory.Exists(logger.FolderName);
             var fileExists = File.Exists(logger.FullPath);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"));
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension));
         }
 
         [Test]
@@ -91,7 +85,7 @@ namespace NightingaleUnitTests
                 folderName: null,
                 filename: "log",
                 hasTimestampInFilename: true,
-                extension: "unittest.txt");
+                extension: _loggerFileExtension);
 
             Assert.IsTrue(Regex.IsMatch(logger.FileName, @"log\d{14}\.unittest\.txt$"));
         }
@@ -101,7 +95,7 @@ namespace NightingaleUnitTests
         {
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Nothing);
             AttemptToLogAllTypes(logger);
-            Assert.IsFalse(File.Exists(_testFolder + @"\log.unittest.txt"));
+            Assert.IsFalse(File.Exists(_testFolder + @"\log." + _loggerFileExtension));
         }
 
         [Test]
@@ -110,8 +104,8 @@ namespace NightingaleUnitTests
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Error);
             AttemptToLogAllTypes(logger);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
             Assert.IsFalse(loggedText.Contains(TEST_WARN_STRING), "Warn should not be logged");
@@ -126,8 +120,8 @@ namespace NightingaleUnitTests
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Warn);
             AttemptToLogAllTypes(logger);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
             Assert.IsTrue(loggedText.Contains(TEST_WARN_STRING), "Warn should be logged");
@@ -158,8 +152,8 @@ namespace NightingaleUnitTests
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Info);
             AttemptToLogAllTypes(logger);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
             Assert.IsTrue(loggedText.Contains(TEST_WARN_STRING), "Warn should be logged");
@@ -174,7 +168,7 @@ namespace NightingaleUnitTests
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Extreme);
             AttemptToLogAllTypes(logger);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
             var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
@@ -197,11 +191,11 @@ namespace NightingaleUnitTests
 
             logger.Error("123456");
 
-            Assert.IsFalse(File.Exists(_testFolder + @"\log.unittest.txt"), "File shouldn't exist before dump");
-            logger.LogDump();
+            Assert.IsFalse(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File shouldn't exist before dump");
+            logger.FinishLogging();
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist after dump");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist after dump");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
             Assert.IsTrue(loggedText.Contains("123456"));
         }
 
