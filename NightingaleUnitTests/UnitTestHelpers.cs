@@ -23,7 +23,7 @@ namespace NightingaleUnitTests
                 {
                     File.Delete(oneFile);
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
                     // Probably still in use, just do nothing.
                     // These pesky SQLite databases will be deletable eventually

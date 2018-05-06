@@ -7,6 +7,10 @@ namespace Nightingale
 {
     public class GlobalObjects
     {
+        public static FeatherLoggerLogMode FeatherLoggerMode { get; set; }
+        public static FeatherLoggerTraceLevel FeatherLoggerTraceLevel { get; set; }
+        public static string FolderName { get; set; }
+
         private static FeatherLogger _logger = null;
         public static FeatherLogger Logger
             { get { return _logger ?? (_logger = CreateFeatherLogger()); } }
@@ -20,9 +24,9 @@ namespace Nightingale
             try
             {
                 var returnLogger = new FeatherLogger(
-                    FeatherLoggerLogMode.LogAsYouGo,
-                    FeatherLoggerTraceLevel.Info,
-                    folderName: null,
+                    logMode: FeatherLoggerMode,
+                    traceLevel: FeatherLoggerTraceLevel,
+                    folderName: FolderName,
                     filename: "Nightingale",
                     hasTimestampInFilename: true,
                     extension: "xml");

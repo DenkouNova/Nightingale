@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Reflection;
+using System.Configuration;
 using System.Windows.Forms;
 using System.ComponentModel;
 using System.Collections.Generic;
