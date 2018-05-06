@@ -7,13 +7,13 @@ namespace Nightingale
 {
     public class GlobalObjects
     {
-        private static DatabaseCreator _databaseCreator = null;
-        public static DatabaseCreator DatabaseCreator
-        { get { return _databaseCreator ?? (_databaseCreator = CreateDatabaseCreator()); } }
-
         private static FeatherLogger _logger = null;
         public static FeatherLogger Logger
             { get { return _logger ?? (_logger = CreateFeatherLogger()); } }
+
+        private static DatabaseCreator _databaseCreator = null;
+        public static DatabaseCreator DatabaseCreator
+        { get { return _databaseCreator ?? (_databaseCreator = CreateDatabaseCreator()); } }
 
         private static FeatherLogger CreateFeatherLogger()
         {
@@ -25,12 +25,12 @@ namespace Nightingale
                     folderName: null,
                     filename: "Nightingale",
                     hasTimestampInFilename: true,
-                    extension: "txt");
+                    extension: "xml");
                 return returnLogger;
             }
             catch (Exception ex)
             {
-                _logger.Error(ex); // not Logger!
+                _logger.Error(ex); // not Logger! You wouldn't want recursion
                 throw;
             }
         }
@@ -43,7 +43,7 @@ namespace Nightingale
                 dbCreator = new DatabaseCreator(Logger);
             } catch (Exception ex)
             {
-                _logger.Error(ex);
+                Logger.Error(ex);
                 throw;
             }
             return dbCreator;            

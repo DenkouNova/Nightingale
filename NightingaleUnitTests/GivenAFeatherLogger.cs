@@ -87,7 +87,7 @@ namespace NightingaleUnitTests
                 hasTimestampInFilename: true,
                 extension: _loggerFileExtension);
 
-            Assert.IsTrue(Regex.IsMatch(logger.FileName, @"log\d{14}\.unittest\.txt$"));
+            Assert.IsTrue(Regex.IsMatch(logger.FileName, @"log\d{14}\.unittest\.xml$"));
         }
 
         [Test]
@@ -136,8 +136,8 @@ namespace NightingaleUnitTests
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Sql);
             AttemptToLogAllTypes(logger);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\log.unittest.txt"), "File should exist");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
             Assert.IsTrue(loggedText.Contains(TEST_WARN_STRING), "Warn should be logged");
@@ -169,7 +169,7 @@ namespace NightingaleUnitTests
             AttemptToLogAllTypes(logger);
 
             Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
-            var loggedText = File.ReadAllText(_testFolder + @"\log.unittest.txt");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
 
             Assert.IsTrue(loggedText.Contains(TEST_ERROR_STRING), "Error should be logged");
             Assert.IsTrue(loggedText.Contains(TEST_WARN_STRING), "Warn should be logged");
@@ -187,7 +187,7 @@ namespace NightingaleUnitTests
                 folderName: null,
                 filename: "log",
                 hasTimestampInFilename: false,
-                extension: "unittest.txt");
+                extension: _loggerFileExtension);
 
             logger.Error("123456");
 
@@ -211,7 +211,7 @@ namespace NightingaleUnitTests
                 folderName: null,
                 filename: "log",
                 hasTimestampInFilename: false,
-                extension: "unittest.txt");
+                extension: _loggerFileExtension);
 
             return logger;
         }

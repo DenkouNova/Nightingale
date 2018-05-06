@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Nightingale;
 using NUnit.Framework;
+using System.Threading;
+using System.Data.SQLite;
 using System.Collections.Generic;
 
 namespace NightingaleUnitTests
@@ -13,10 +15,17 @@ namespace NightingaleUnitTests
     [Category("Database")]
     public class GivenADatabaseCreator
     {
-        private const string TEST_DATABASE_FILE_NAME = "database.unittest.sqlite";
+        // This is a pattern I haven't really explored, but.
+        // This is a global variable indicating whether or not the test being run is the
+        // prerequisite for another test.
+        // If the test fails, it should give the default error message, but if a prerequisite
+        // test fails, the error message should be to fix that prerequisite test first.
+        private string _runningPrerequisiteErrorMessage;
+
+        private string _databasePath;
 
         private string _testFolder;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -31,9 +40,47 @@ namespace NightingaleUnitTests
         {
             var dbCreator = GlobalObjects.DatabaseCreator;
 
-            dbCreator.CreateDatabase(_testFolder, TEST_DATABASE_FILE_NAME);
+            var dbFilename = "database" + DateTime.Now.ToString("yyyyMMddhhmmss") + "." + UnitTestHelpers.TEST_DATABASE_EXTENSION;
+            dbCreator.CreateDatabase(_testFolder, dbFilename);
 
-            Assert.IsTrue(File.Exists(_testFolder + @"\" + TEST_DATABASE_FILE_NAME));
+            _databasePath = _testFolder + @"\" + dbFilename;
+
+            Assert.IsTrue(File.Exists(_databasePath), 
+                _runningPrerequisiteErrorMessage ?? "Database should be created");
+        }
+
+        [Test]
+        public void GivenADatabaseCreator_WhenICreateADatabase_ThenTheDatabaseIsPopulated()
+        {
+            TestPrerequisite(GivenADatabaseCreator_WhenICreateADatabase_ThenTheDatabaseIsCreated);
+
+            using (var connection = new SQLiteConnection("Data Source=" + _databasePath + ";Version=3;"))
+            {
+                connection.Open();
+                string[] tablesToVerify = { "Category", "SubCategory", "Source", "SubSource", "Link" };
+
+                foreach(string oneTable in tablesToVerify)
+                {
+                    string query = "SELECT 1 FROM " + oneTable;
+                    using (var command = new System.Data.SQLite.SQLiteCommand(query, connection))
+                    {
+                        // the real test here is Assert.DoesNotThrow()
+                        command.ExecuteReader();
+                    }
+                }
+                connection.Close();
+            }
+        }
+
+
+
+        private delegate void PrerequisiteTest();
+
+        private void TestPrerequisite(PrerequisiteTest test)
+        {
+            _runningPrerequisiteErrorMessage = "Prerequisite '" + test.Method.Name + "' not met";
+            test.Invoke();
+            _runningPrerequisiteErrorMessage = null;
         }
     }
 }

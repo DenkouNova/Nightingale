@@ -41,6 +41,7 @@ namespace Nightingale
             if (String.IsNullOrEmpty(folderPath))
             {
                 MessageBox.Show(_logger.Info("Cancelled by user."));
+                _logger.CloseSection(location);
                 return;
             }
 
@@ -50,7 +51,17 @@ namespace Nightingale
                 message = _logger.Info("Please enter the path of an existing folder.");
                 MessageBox.Show(message, "Folder does not exist",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                _logger.CloseSection(location);
+                return;
             }
+
+            message = _logger.Info("Enter a filename for the dictionary.");
+            var filename = Microsoft.VisualBasic.Interaction.InputBox(
+                message, "Dictionary filename",
+                "Dictionary" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".sqlite",
+                this.Location.X + ((this.Size.Width - 370) / 2), this.Location.Y + ((this.Size.Height - 160) / 2));
+
+            var databaseCreator = GlobalObjects.DatabaseCreator.CreateDatabase(folderPath, filename);
 
             _logger.CloseSection("location");
         }

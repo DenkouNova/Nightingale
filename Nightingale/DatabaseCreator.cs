@@ -47,19 +47,23 @@ namespace Nightingale
             _logger.OpenSection(location);
 
             _logger.Info("Opening database connection...");
-            var connection = new SQLiteConnection("Data Source=" + databasePath + ";Version=3;");
-            connection.Open();
 
-            string[] createTableStatements = {
-                CREATE_TABLE_CATEGORY,
-                CREATE_TABLE_SUBCATEGORY,
-                CREATE_TABLE_SOURCE,
-                CREATE_TABLE_SUBSOURCE,
-                CREATE_TABLE_LINK };
-
-            foreach(var createOneTable in createTableStatements)
+            using (var connection = new SQLiteConnection("Data Source=" + databasePath + ";Version=3;"))
             {
-                CreateTable(createOneTable, connection);
+                connection.Open();
+
+                string[] createTableStatements = {
+                    CREATE_TABLE_CATEGORY,
+                    CREATE_TABLE_SUBCATEGORY,
+                    CREATE_TABLE_SOURCE,
+                    CREATE_TABLE_SUBSOURCE,
+                    CREATE_TABLE_LINK };
+
+                foreach (var createOneTable in createTableStatements)
+                {
+                    CreateTable(createOneTable, connection);
+                }
+                connection.Close();
             }
 
             _logger.CloseSection(location);
@@ -75,8 +79,10 @@ namespace Nightingale
 
             try
             {
-                var command = new SQLiteCommand(query, connection);
-                command.ExecuteNonQuery();
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
                 _logger.Info("Table created.");
             }
             catch (Exception ex)
