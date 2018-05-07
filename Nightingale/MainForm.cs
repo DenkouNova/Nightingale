@@ -60,7 +60,7 @@ namespace Nightingale
             var databaseCreator = GlobalObjects.DatabaseCreator.CreateDatabase(folderPath, filename);
 
             message = "Database created.";
-            _logger.Info(message);
+            MessageBox.Show(_logger.Info(message));
             _logger.CloseSection(location);
         }
 
@@ -83,9 +83,53 @@ namespace Nightingale
         {
             string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(location);
-            var message = "Not implemented.";
-            MessageBox.Show(_logger.Info(message));
+
+            var databasePath = GetFilePathFromOpenFileDialog(
+                message: "Choose an sqlite database/dictionary",
+                filter: "SQLite database|*.sqlite");
+            if (String.IsNullOrEmpty(databasePath))
+            {
+                _logger.CloseSection(location);
+                return;
+            }
+
+            var importedFilePath = GetFilePathFromOpenFileDialog(
+                message: "Choose a file to import",
+                filter: "Text files|*.txt");
+            if (String.IsNullOrEmpty(importedFilePath))
+            {
+                _logger.CloseSection(location);
+                return;
+            }
+
             _logger.CloseSection(location);
+        }
+        // "SQLite database|*.sqlite"
+        private string GetFilePathFromOpenFileDialog(string message, string filter)
+        {
+            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(location);
+
+            _logger.Info(message);
+            var openFileDialog = new OpenFileDialog()
+            {
+                Title = message,
+                Filter = filter
+            };
+
+            string returnValue = null;
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                MessageBox.Show(_logger.Info("Cancelled by user."));
+            }
+            else
+            {
+                returnValue = openFileDialog.FileName;
+                _logger.Info("User chose '" + returnValue + "'");
+            }
+
+            _logger.CloseSectionWithReturnInfo(returnValue, location);
+            return returnValue;
         }
 
         private void btnStudy_Click(object sender, EventArgs e)

@@ -115,6 +115,29 @@ namespace NightingaleUnitTests
         }
 
         [Test]
+        public void GivenAFeatherLogger_IfAttemptingToLogNullString_ThenStringNullWithinParenthesesIsLogged()
+        {
+            var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Extreme);
+            logger.Error((string)null);
+            logger.Warn((string)null);
+            logger.Sql((string)null);
+            logger.Info((string)null);
+            logger.Extreme((string)null);
+
+            Assert.IsTrue(File.Exists(_testFolder + @"\log." + _loggerFileExtension), "File should exist");
+            var loggedText = File.ReadAllText(_testFolder + @"\log." + _loggerFileExtension);
+
+            string[] logLevels = { "ERROR:", "WARN :", "S Q L:", "INFO :", "EXTRM:" };
+            foreach(string oneLevel in logLevels)
+            {
+                var stringToFind = oneLevel + " (null)";
+                Assert.IsTrue(loggedText.Contains(stringToFind), 
+                    "Log file should contain the string '" + stringToFind + "'");
+            }
+            
+        }
+
+        [Test]
         public void GivenAFeatherLogger_IfTraceLevelIsWarn_ThenOnlyErrorAndWarnAreLogged()
         {
             var logger = GetFeatherLoggerForTestingLogLevels(FeatherLoggerTraceLevel.Warn);

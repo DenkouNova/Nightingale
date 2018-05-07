@@ -120,31 +120,31 @@ namespace Nightingale
 
         public string Error(string s)
         {
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("ERROR: " + s);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("ERROR: " + (s ?? "(null)"));
             return s;
         }
 
         public string Warn(string s)
         {
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Warn) WriteOneLine("WARN : " + s);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Warn) WriteOneLine("WARN : " + (s ?? "(null)"));
             return s;
         }
 
         public string Sql(string s)
         {
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Sql) WriteOneLine("S Q L: " + s);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Sql) WriteOneLine("S Q L: " + (s ?? "(null)"));
             return s;
         }
 
         public string Info(string s)
         {
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Info) WriteOneLine("INFO : " + s);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Info) WriteOneLine("INFO : " + (s ?? "(null)"));
             return s;
         }
 
         public string Extreme(string s)
         {
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Extreme) WriteOneLine("EXTRM: " + s);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Extreme) WriteOneLine("EXTRM: " + (s ?? "(null)"));
             return s;
         }
 
@@ -175,6 +175,7 @@ namespace Nightingale
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < _currentTabLevel; i++) sb.Append(TAB_STRING);
+            s = s ?? "(null)";
             sb.Append(s);
 
             var loggedString = sb.ToString().ReplaceWhitespaceSpecialCharacters();
