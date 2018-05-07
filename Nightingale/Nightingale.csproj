@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseCreator.cs" />
+    <Compile Include="Domain\Subcategory.cs" />
     <Compile Include="Domain\Category.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FeatherLogger.cs" />
@@ -166,6 +167,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Mappings\Category.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Subcategory.hbm.xml" />
     <Content Include="Resources\Icon_Dictionary_120x120.png" />
     <Content Include="Resources\Icon_FillData_120x120.png" />
     <Content Include="Resources\Icon_Study_120x120.png" />

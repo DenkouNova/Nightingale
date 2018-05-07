@@ -3,18 +3,13 @@
                   assembly="Nightingale"
                   namespace="Nightingale.Domain">
 
-  <class name="Category" table="Category">
+  <class name="Subcategory" table="Subcategory">
     <id name="Id">
       <generator class="increment" />
     </id>
     <property name="Name" />
     <property name="Disabled" />
-    <set name="Subcategories" cascade="all">
-      <key>
-        <column name="Category_Id"/>
-      </key>
-      <one-to-many class="Subcategory"/>
-    </set>
+    <many-to-one name="Category" class="Category" column="Category_Id"/>
   </class>
 
 </hibernate-mapping>

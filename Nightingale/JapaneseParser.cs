@@ -23,6 +23,21 @@ namespace Nightingale
                         Name = "abc",
                         Disabled = 0
                     };
+
+                    var oneSubcategory = new Domain.Subcategory()
+                    {
+                        Name = "def",
+                        Disabled = 0
+                    };
+                    var anotherSubcategory = new Domain.Subcategory()
+                    {
+                        Name = "ghi",
+                        Disabled = 1
+                    };
+
+                    oneCategory.Subcategories.Add(oneSubcategory);
+                    oneCategory.Subcategories.Add(anotherSubcategory);
+
                     using (var transaction = dbSession.BeginTransaction())
                     {
                         dbSession.Save(oneCategory);
