@@ -3,18 +3,18 @@
                   assembly="Nightingale"
                   namespace="Nightingale.Domain">
 
-  <class name="Subcategory" table="Subcategory">
+  <class name="Subsource" table="Subsource">
     <id name="Id">
       <generator class="increment" />
     </id>
     <property name="Name" />
     <property name="Disabled" />
-    <many-to-one name="Category" class="Category" column="Category_Id"/>
-    <set name="Sources" cascade="all">
+    <many-to-one name="Source" class="Source" column="Source_Id"/>
+    <set name="Links" cascade="all">
       <key>
-        <column name="Subcategory_Id"/>
+        <column name="Subsource_Id"/>
       </key>
-      <one-to-many class="Source"/>
+      <one-to-many class="Link"/>
     </set>
   </class>
 

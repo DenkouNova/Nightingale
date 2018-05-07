@@ -35,6 +35,32 @@ namespace Nightingale
                         Disabled = 1
                     };
 
+                    var oneSource = new Domain.Source()
+                    {
+                        Name = "gfjkal"
+                    };
+
+                    var oneSubsource = new Domain.Subsource()
+                    {
+                        Name = "bjgfda"
+                    };
+
+                    var oneLink = new Domain.Link()
+                    {
+                        Name = "123",
+                        MasteryAToB = 12,
+                        MasteryBToA = 24,
+                        DatumA = "A",
+                        DatumB = "B",
+                        LastStudiedDate = "date"
+                    };
+
+                    oneSubsource.Links.Add(oneLink);
+
+                    oneSource.Subsources.Add(oneSubsource);
+
+                    oneSubcategory.Sources.Add(oneSource);
+
                     oneCategory.Subcategories.Add(oneSubcategory);
                     oneCategory.Subcategories.Add(anotherSubcategory);
 

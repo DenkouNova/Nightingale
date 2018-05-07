@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                  assembly="Nightingale"
+                  namespace="Nightingale.Domain">
+
+  <class name="Link" table="Link">
+    <id name="Id">
+      <generator class="increment" />
+    </id>
+    <property name="Name" />
+    <property name="Disabled" />
+    <many-to-one name="Subsource" class="Subsource" column="Subsource_Id"/>
+    <property name="MasteryAToB" />
+    <property name="MasteryBToA" />
+    <property name="LastStudiedDate" />
+    <property name="Discriminant" />
+    <property name="DatumA" column="DatumA_Varchar" />
+    <property name="DatumB" column="DatumB_Varchar" />
+  </class>
+
+</hibernate-mapping>

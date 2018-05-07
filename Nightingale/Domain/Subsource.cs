@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 namespace Nightingale.Domain
 {
-    public class Subcategory
+    public class Subsource
     {
-        public Subcategory()
+        public Subsource()
         {
-            Sources = new HashSet<Source>();
+            Links = new HashSet<Link>();
         }
 
         public virtual int? Id { get; set; }
         public virtual string Name { get; set; }
         public virtual int Disabled { get; set; }
 
-        public virtual Category Category { get; set; }
+        public virtual Source Source { get; set; }
 
-        public virtual ISet<Source> Sources { get; set; }
+        public virtual ISet<Link> Links { get; set; }
     }
 }
