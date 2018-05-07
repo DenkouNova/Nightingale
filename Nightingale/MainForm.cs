@@ -23,12 +23,7 @@ namespace Nightingale
             _logger.OpenSection("MainForm");
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("You did it!");
-        }
-
-        private void btnCreateStudyDictionary_Click(object sender, EventArgs e)
+        private void btnCreateDictionary_Click(object sender, EventArgs e)
         {
             string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(location);
@@ -64,13 +59,43 @@ namespace Nightingale
 
             var databaseCreator = GlobalObjects.DatabaseCreator.CreateDatabase(folderPath, filename);
 
-            _logger.CloseSection("location");
+            message = "Database created.";
+            _logger.Info(message);
+            _logger.CloseSection(location);
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _logger.CloseSection("MainForm");
             _logger.FinishLogging();
         }
+
+        private void cbUseDatabaseSqlite_CheckedChanged(object sender, EventArgs e)
+        {
+            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(location);
+            var message = "Not implemented.";
+            MessageBox.Show(_logger.Info(message));
+            _logger.CloseSection(location);
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(location);
+            var message = "Not implemented.";
+            MessageBox.Show(_logger.Info(message));
+            _logger.CloseSection(location);
+        }
+
+        private void btnStudy_Click(object sender, EventArgs e)
+        {
+            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(location);
+            var message = "Not implemented.";
+            MessageBox.Show(_logger.Info(message));
+            _logger.CloseSection(location);
+        }
+
     }
 }
