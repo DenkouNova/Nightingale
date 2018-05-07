@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                  assembly="Nightingale"
+                  namespace="Nightingale.Domain">
+
+  <class name="Category" table="Category">
+    <id name="Id">
+      <generator class="increment" />
+    </id>
+    <property name="Name" />
+    <property name="Disabled" />
+  </class>
+
+</hibernate-mapping>

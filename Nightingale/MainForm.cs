@@ -92,7 +92,7 @@ namespace Nightingale
                 _logger.CloseSection(location);
                 return;
             }
-
+            /*
             var importedFilePath = GetFilePathFromOpenFileDialog(
                 message: "Choose a file to import",
                 filter: "Text files|*.txt");
@@ -101,6 +101,9 @@ namespace Nightingale
                 _logger.CloseSection(location);
                 return;
             }
+            */
+            // debugger;
+            JapaneseParser.DoShit(databasePath);
 
             _logger.CloseSection(location);
         }

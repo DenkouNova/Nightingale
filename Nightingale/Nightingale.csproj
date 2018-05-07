@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseCreator.cs" />
+    <Compile Include="Domain\Category.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FeatherLogger.cs" />
     <Compile Include="IniFileReader.cs" />
@@ -126,6 +127,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalObjects.cs" />
+    <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -160,6 +162,10 @@
     <Content Include="..\packages\System.Data.SQLite.Core.1.0.108.0\build\net40\x86\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Mappings\Category.hbm.xml" />
     <Content Include="Resources\Icon_Dictionary_120x120.png" />
     <Content Include="Resources\Icon_FillData_120x120.png" />
     <Content Include="Resources\Icon_Study_120x120.png" />
