@@ -110,18 +110,31 @@ namespace Nightingale
             }
         }
 
+        private string ExceptionToString(Exception ex)
+        {
+            string exceptionString = "Exception: '" + ex.Message + "'" +
+                ex.InnerException != null ? " Inner exception: '" + ex.InnerException.Message + "'" : "";
+            return exceptionString;
+        }
+
         public string Error(Exception ex)
         {
-            string ExceptionMessage = "Exception: '" + ex.Message + "'" +
-                ex.InnerException != null ? " Inner exception: '" + ex.InnerException.Message + "'" : "";
-            if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("ERROR: " + ExceptionMessage);
-            return ExceptionMessage;
+            var exceptionString = ExceptionToString(ex);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("ERROR: " + exceptionString);
+            return exceptionString;
         }
 
         public string Error(string s)
         {
             if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("ERROR: " + (s ?? "(null)"));
             return s;
+        }
+
+        public string Warn(Exception ex)
+        {
+            var exceptionString = ExceptionToString(ex);
+            if (this.TraceLevel >= FeatherLoggerTraceLevel.Error) WriteOneLine("WARN : " + exceptionString);
+            return exceptionString;
         }
 
         public string Warn(string s)

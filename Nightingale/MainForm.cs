@@ -96,21 +96,41 @@ namespace Nightingale
                 filter: "SQLite database|*.sqlite");
             if (String.IsNullOrEmpty(databasePath))
             {
+                MessageBox.Show(_logger.Info("Cancelled by user."));
                 _logger.CloseSection(location);
                 return;
             }
-            /*
+            
             var importedFilePath = GetFilePathFromOpenFileDialog(
                 message: "Choose a file to import",
                 filter: "Text files|*.txt");
             if (String.IsNullOrEmpty(importedFilePath))
             {
+                MessageBox.Show(_logger.Info("Cancelled by user."));
                 _logger.CloseSection(location);
                 return;
             }
-            */
-            // debugger;
-            JapaneseParser.DoShit(databasePath);
+
+            _logger.Info("Will copy database first");
+
+            var dbCopier = GlobalObjects.DatabaseCopier;
+            var copyDatabasePath = dbCopier.CopyDatabaseForImport(databasePath);
+
+            if (String.IsNullOrEmpty(copyDatabasePath))
+            {
+                // TODO UNTESTED
+                _logger.Error("Database copy failed.");
+            }
+            else
+            {
+                var importSuccess = JapaneseParser.DoShit(copyDatabasePath);
+                if (importSuccess)
+                {
+                    dbCopier.RestoreFile();
+                    MessageBox.Show("Success");
+                }
+                MessageBox.Show("Error");
+            }
 
             _logger.CloseSection(location);
         }

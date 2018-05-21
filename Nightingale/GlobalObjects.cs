@@ -17,7 +17,11 @@ namespace Nightingale
 
         private static DatabaseCreator _databaseCreator = null;
         public static DatabaseCreator DatabaseCreator
-        { get { return _databaseCreator ?? (_databaseCreator = CreateDatabaseCreator()); } }
+            { get { return _databaseCreator ?? (_databaseCreator = CreateDatabaseCreator()); } }
+
+        private static DatabaseCopier _databaseCopier = null;
+        public static DatabaseCopier DatabaseCopier
+            { get { return _databaseCopier ?? (_databaseCopier = new DatabaseCopier(Logger)); } }
 
         private static FeatherLogger CreateFeatherLogger()
         {

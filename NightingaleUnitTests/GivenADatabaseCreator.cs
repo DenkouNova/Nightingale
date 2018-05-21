@@ -13,15 +13,8 @@ namespace NightingaleUnitTests
 
     [TestFixture]
     [Category("Database")]
-    public class GivenADatabaseCreator
+    public class GivenADatabaseCreator : BaseTestWithPrerequisites
     {
-        // This is a pattern I haven't really explored, but.
-        // This is a global variable indicating whether or not the test being run is the
-        // prerequisite for another test.
-        // If the test fails, it should give the default error message, but if a prerequisite
-        // test fails, the error message should be to fix that prerequisite test first.
-        private string _runningPrerequisiteErrorMessage;
-
         private string _databasePath;
 
         private string _testFolder;
@@ -70,17 +63,6 @@ namespace NightingaleUnitTests
                 }
                 connection.Close();
             }
-        }
-
-
-
-        private delegate void PrerequisiteTest();
-
-        private void TestPrerequisite(PrerequisiteTest test)
-        {
-            _runningPrerequisiteErrorMessage = "Prerequisite '" + test.Method.Name + "' not met";
-            test.Invoke();
-            _runningPrerequisiteErrorMessage = null;
         }
     }
 }

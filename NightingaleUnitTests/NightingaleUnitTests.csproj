@@ -101,6 +101,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="BaseTestWithPrerequisites.cs" />
+    <Compile Include="GivenADatabaseCopier.cs" />
     <Compile Include="GivenADatabaseCreator.cs" />
     <Compile Include="GivenAFeatherLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

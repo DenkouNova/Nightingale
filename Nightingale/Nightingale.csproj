@@ -114,6 +114,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseCopier.cs" />
     <Compile Include="DatabaseCreator.cs" />
     <Compile Include="Domain\Link.cs" />
     <Compile Include="Domain\Subsource.cs" />
@@ -170,7 +171,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Mappings\Category.hbm.xml" />
-    <EmbeddedResource Include="Mappings\Subcategory.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Subcategory.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Mappings\Source.hbm.xml" />
     <EmbeddedResource Include="Mappings\Subsource.hbm.xml" />
     <EmbeddedResource Include="Mappings\Link.hbm.xml" />

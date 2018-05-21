@@ -8,7 +8,7 @@ namespace Nightingale
 {
     public static class JapaneseParser
     {
-        public static void DoShit(string databasePath)
+        public static bool DoShit(string databasePath)
         {
             // Just add a new entry in the Category table, for testing.
 
@@ -73,7 +73,9 @@ namespace Nightingale
                 }
                 dbConnection.Close();
             }
-            
+
+            // TODO return false when error
+            return true;
         }
     }
 }

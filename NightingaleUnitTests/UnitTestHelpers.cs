@@ -8,8 +8,10 @@ namespace NightingaleUnitTests
 {
     public class UnitTestHelpers
     {
-        public static string TEST_LOGGER_EXTENSION = "unittest.xml";
         public static string TEST_DATABASE_EXTENSION = "unittest.sqlite";
+        public static string TEST_DATABASE_EXTENSION_IMPORTING = "unittest.sqlite.importing";
+
+        public static string TEST_LOGGER_EXTENSION = "unittest.xml";
 
         public static string LOGGER_FILTER_TXT = "Nightingale*.txt";
         public static string LOGGER_FILTER_XML = "Nightingale*.xml";
@@ -17,16 +19,20 @@ namespace NightingaleUnitTests
         public static void DeleteTestFiles(string folderPath)
         {
             // Attempt to delete SQLite databases
-            foreach (var oneFile in Directory.GetFiles(folderPath, "*." + TEST_DATABASE_EXTENSION))
+            var databaseExtensions = new string[] { TEST_DATABASE_EXTENSION, TEST_DATABASE_EXTENSION_IMPORTING };
+            foreach (var oneExtension in databaseExtensions)
             {
-                try
+                foreach (var oneFile in Directory.GetFiles(folderPath, "*." + oneExtension))
                 {
-                    File.Delete(oneFile);
-                }
-                catch (IOException)
-                {
-                    // Probably still in use, just do nothing.
-                    // These pesky SQLite databases will be deletable eventually
+                    try
+                    {
+                        File.Delete(oneFile);
+                    }
+                    catch (IOException)
+                    {
+                        // Probably still in use, just do nothing.
+                        // These pesky SQLite databases will be deletable eventually
+                    }
                 }
             }
 
