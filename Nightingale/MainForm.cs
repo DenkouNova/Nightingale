@@ -57,6 +57,13 @@ namespace Nightingale
                 "Dictionary" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".sqlite",
                 this.Location.X + ((this.Size.Width - 370) / 2), this.Location.Y + ((this.Size.Height - 160) / 2));
 
+            if (String.IsNullOrEmpty(filename))
+            {
+                MessageBox.Show(_logger.Info("Cancelled by user."));
+                _logger.CloseSection(location);
+                return;
+            }
+            
             var databaseCreator = GlobalObjects.DatabaseCreator.CreateDatabase(folderPath, filename);
 
             message = "Database created.";
