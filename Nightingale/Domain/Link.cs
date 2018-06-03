@@ -6,6 +6,15 @@ namespace Nightingale.Domain
 {
     public class Link
     {
+        public Link() { }
+
+        public Link(string datumA, string datumB)
+        {
+            Name = datumA + " → " + datumB;
+            DatumA = datumA;
+            DatumB = datumB;
+        }
+
         public virtual int? Id { get; set; }
         public virtual string Name { get; set; }
         public virtual int Disabled { get; set; }

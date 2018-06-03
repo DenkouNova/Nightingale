@@ -11,6 +11,12 @@ namespace Nightingale.Domain
             Subsources = new HashSet<Subsource>();
         }
 
+        public Source(string name)
+        {
+            Subsources = new HashSet<Subsource>();
+            Name = name;
+        }
+
         public virtual int? Id { get; set; }
         public virtual string Name { get; set; }
         public virtual int Disabled { get; set; }

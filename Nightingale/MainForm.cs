@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Reflection;
+using Nightingale.Parsers;
 using System.Configuration;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -123,13 +124,13 @@ namespace Nightingale
             }
             else
             {
-                var importSuccess = JapaneseParser.DoShit(copyDatabasePath);
+                var jpParser = new JapaneseParser();
+                var importSuccess = jpParser.ImportFile(copyDatabasePath, importedFilePath);
                 if (importSuccess)
                 {
                     dbCopier.RestoreFile();
-                    MessageBox.Show("Success");
+                    MessageBox.Show(_logger.Info("Success!"));
                 }
-                MessageBox.Show("Error");
             }
 
             _logger.CloseSection(location);

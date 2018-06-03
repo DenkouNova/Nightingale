@@ -124,7 +124,8 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FeatherLogger.cs" />
     <Compile Include="IniFileReader.cs" />
-    <Compile Include="JapaneseParser.cs" />
+    <Compile Include="Parsers\AbstractParser.cs" />
+    <Compile Include="Parsers\JapaneseParser.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +134,7 @@
     </Compile>
     <Compile Include="GlobalObjects.cs" />
     <Compile Include="NHibernateHelper.cs" />
+    <Compile Include="Parsers\LineType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
@@ -170,7 +172,9 @@
     <Content Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Mappings\Category.hbm.xml" />
+    <EmbeddedResource Include="Mappings\Category.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Mappings\Subcategory.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

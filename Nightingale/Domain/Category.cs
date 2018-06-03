@@ -11,6 +11,12 @@ namespace Nightingale.Domain
             Subcategories = new HashSet<Subcategory>();
         }
 
+        public Category(string name)
+        {
+            Subcategories = new HashSet<Subcategory>();
+            Name = name;
+        }
+
         public virtual int? Id { get; set; }
         public virtual string Name { get; set; }
         public virtual int Disabled { get; set; }
