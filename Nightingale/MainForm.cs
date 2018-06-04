@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Reflection;
+using Nightingale.Forms;
 using Nightingale.Parsers;
 using System.Configuration;
 using System.Windows.Forms;
@@ -135,6 +136,7 @@ namespace Nightingale
 
             _logger.CloseSection(location);
         }
+
         // "SQLite database|*.sqlite"
         private string GetFilePathFromOpenFileDialog(string message, string filter)
         {
@@ -167,9 +169,21 @@ namespace Nightingale
         {
             string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(location);
-            var message = "Not implemented.";
-            MessageBox.Show(_logger.Info(message));
+
+            var databasePath = GetFilePathFromOpenFileDialog(
+                message: "Choose an sqlite database/dictionary",
+                filter: "SQLite database|*.sqlite");
+            if (String.IsNullOrEmpty(databasePath))
+            {
+                MessageBox.Show(_logger.Info("Cancelled by user."));
+                _logger.CloseSection(location);
+                return;
+            }
+
+            var form = new JapaneseStudyForm(databasePath);
+
             _logger.CloseSection(location);
+            form.ShowDialog();
         }
 
     }

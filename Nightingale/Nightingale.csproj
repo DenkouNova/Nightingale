@@ -124,6 +124,12 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FeatherLogger.cs" />
     <Compile Include="IniFileReader.cs" />
+    <Compile Include="Forms\JapaneseStudyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\JapaneseStudyForm.Designer.cs">
+      <DependentUpon>JapaneseStudyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Parsers\AbstractParser.cs" />
     <Compile Include="Parsers\JapaneseParser.cs" />
     <Compile Include="MainForm.cs">
@@ -137,6 +143,9 @@
     <Compile Include="Parsers\LineType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\JapaneseStudyForm.resx">
+      <DependentUpon>JapaneseStudyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -96,11 +96,9 @@ namespace Nightingale
 
             try
             {
-                /*
                 _logger.Info("Deleting copy file...");
                 File.Delete(CopyDatabasePath);
                 _logger.Info("Deleted.");
-                */
             }
             catch (Exception ex)
             {
