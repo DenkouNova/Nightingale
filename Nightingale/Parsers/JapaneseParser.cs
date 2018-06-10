@@ -60,8 +60,6 @@ namespace Nightingale.Parsers
 
         private void ParseAllLines(string[] allLines)
         {
-            string currentKanji, currentKana, currentTranslation = "";
-
             var lastLineType = JapaneseParserLineType.Nothing;
 
             foreach (var oneLine in allLines)

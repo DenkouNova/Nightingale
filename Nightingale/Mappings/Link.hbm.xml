@@ -9,7 +9,7 @@
     </id>
     <property name="Name" />
     <property name="Disabled" />
-    <many-to-one name="Subsource" class="Subsource" column="Subsource_Id"/>
+    <many-to-one name="Subsource" class="Subsource" column="Subsource_Id" lazy="false"/>
     <property name="MasteryAToB" />
     <property name="MasteryBToA" />
     <property name="LastStudiedDate" />

@@ -42,14 +42,32 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.cbSmallBrush = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.lbSource = new System.Windows.Forms.Label();
+            this.lbWord = new System.Windows.Forms.Label();
+            this.lbQuote = new System.Windows.Forms.Label();
+            this.lbDefinitionOrTranslation = new System.Windows.Forms.Label();
+            this.tlpButtons = new System.Windows.Forms.TableLayoutPanel();
+            this.btnMasteryDown = new System.Windows.Forms.Button();
+            this.btnMasteryUp = new System.Windows.Forms.Button();
+            this.btnNext = new System.Windows.Forms.Button();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblIdMastery = new System.Windows.Forms.Label();
+            this.panel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tlpButtons.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.tableLayoutPanel2);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(200, 0);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
@@ -202,6 +220,181 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(959, 584);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(759, 584);
+            this.tableLayoutPanel2.TabIndex = 4;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.lbSource, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.lbWord, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.lbQuote, 0, 5);
+            this.tableLayoutPanel3.Controls.Add(this.lbDefinitionOrTranslation, 0, 6);
+            this.tableLayoutPanel3.Controls.Add(this.tlpButtons, 0, 7);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 9;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 105F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 55F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(759, 584);
+            this.tableLayoutPanel3.TabIndex = 1;
+            // 
+            // lbSource
+            // 
+            this.lbSource.AutoSize = true;
+            this.lbSource.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lbSource.Font = new System.Drawing.Font("MS Mincho", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lbSource.Location = new System.Drawing.Point(3, 69);
+            this.lbSource.Name = "lbSource";
+            this.lbSource.Size = new System.Drawing.Size(753, 30);
+            this.lbSource.TabIndex = 0;
+            this.lbSource.Text = "「セーラームーン第０８話」より";
+            this.lbSource.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbWord
+            // 
+            this.lbWord.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbWord.AutoSize = true;
+            this.lbWord.Font = new System.Drawing.Font("MS Mincho", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lbWord.Location = new System.Drawing.Point(320, 99);
+            this.lbWord.Name = "lbWord";
+            this.lbWord.Size = new System.Drawing.Size(118, 48);
+            this.lbWord.TabIndex = 1;
+            this.lbWord.Text = "落第";
+            this.lbWord.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbQuote
+            // 
+            this.lbQuote.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbQuote.AutoSize = true;
+            this.lbQuote.Font = new System.Drawing.Font("MS Mincho", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lbQuote.Location = new System.Drawing.Point(8, 204);
+            this.lbQuote.Name = "lbQuote";
+            this.lbQuote.Size = new System.Drawing.Size(742, 48);
+            this.lbQuote.TabIndex = 2;
+            this.lbQuote.Text = "55 うさぎママ「うさぎ、ママね、贅沢は言わないわ。落第だけはしないでちょうだい。」";
+            this.lbQuote.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lbDefinitionOrTranslation
+            // 
+            this.lbDefinitionOrTranslation.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lbDefinitionOrTranslation.AutoSize = true;
+            this.lbDefinitionOrTranslation.Font = new System.Drawing.Font("Calibri", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbDefinitionOrTranslation.Location = new System.Drawing.Point(103, 304);
+            this.lbDefinitionOrTranslation.Name = "lbDefinitionOrTranslation";
+            this.lbDefinitionOrTranslation.Size = new System.Drawing.Size(552, 52);
+            this.lbDefinitionOrTranslation.TabIndex = 3;
+            this.lbDefinitionOrTranslation.Text = "(n,vs) failure, dropping out of a class, (Pgfadgfadgadgadgadgadgfadgagfadgfadgadg" +
+    "adgfadggaddgfad)";
+            this.lbDefinitionOrTranslation.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tlpButtons
+            // 
+            this.tlpButtons.ColumnCount = 5;
+            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tlpButtons.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpButtons.Controls.Add(this.btnMasteryDown, 3, 0);
+            this.tlpButtons.Controls.Add(this.btnMasteryUp, 1, 0);
+            this.tlpButtons.Controls.Add(this.btnNext, 0, 0);
+            this.tlpButtons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpButtons.Location = new System.Drawing.Point(3, 362);
+            this.tlpButtons.Name = "tlpButtons";
+            this.tlpButtons.RowCount = 1;
+            this.tlpButtons.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpButtons.Size = new System.Drawing.Size(753, 194);
+            this.tlpButtons.TabIndex = 5;
+            // 
+            // btnMasteryDown
+            // 
+            this.btnMasteryDown.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnMasteryDown.Font = new System.Drawing.Font("MS Mincho", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnMasteryDown.Location = new System.Drawing.Point(389, 3);
+            this.btnMasteryDown.Name = "btnMasteryDown";
+            this.btnMasteryDown.Size = new System.Drawing.Size(194, 188);
+            this.btnMasteryDown.TabIndex = 3;
+            this.btnMasteryDown.Text = "↓";
+            this.btnMasteryDown.UseVisualStyleBackColor = true;
+            this.btnMasteryDown.Click += new System.EventHandler(this.btnMasteryDown_Click);
+            // 
+            // btnMasteryUp
+            // 
+            this.btnMasteryUp.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnMasteryUp.Font = new System.Drawing.Font("MS Mincho", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnMasteryUp.Location = new System.Drawing.Point(169, 3);
+            this.btnMasteryUp.Name = "btnMasteryUp";
+            this.btnMasteryUp.Size = new System.Drawing.Size(194, 188);
+            this.btnMasteryUp.TabIndex = 0;
+            this.btnMasteryUp.Text = "↑";
+            this.btnMasteryUp.UseVisualStyleBackColor = true;
+            this.btnMasteryUp.Click += new System.EventHandler(this.btnMasteryUp_Click);
+            // 
+            // btnNext
+            // 
+            this.btnNext.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnNext.Font = new System.Drawing.Font("MS Mincho", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNext.Location = new System.Drawing.Point(3, 3);
+            this.btnNext.Name = "btnNext";
+            this.btnNext.Size = new System.Drawing.Size(160, 188);
+            this.btnNext.TabIndex = 4;
+            this.btnNext.Text = "→";
+            this.btnNext.UseVisualStyleBackColor = true;
+            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 3;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.lblIdMastery, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 28);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(753, 28);
+            this.tableLayoutPanel4.TabIndex = 8;
+            // 
+            // lblIdMastery
+            // 
+            this.lblIdMastery.AutoSize = true;
+            this.lblIdMastery.BackColor = System.Drawing.Color.LightGreen;
+            this.lblIdMastery.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.lblIdMastery.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblIdMastery.Font = new System.Drawing.Font("MS Mincho", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblIdMastery.Location = new System.Drawing.Point(229, 0);
+            this.lblIdMastery.Name = "lblIdMastery";
+            this.lblIdMastery.Size = new System.Drawing.Size(294, 28);
+            this.lblIdMastery.TabIndex = 7;
+            this.lblIdMastery.Text = "ID:380 Mastery:34";
+            this.lblIdMastery.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // JapaneseStudyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,6 +404,7 @@
             this.Name = "JapaneseStudyForm";
             this.Text = "JapaneseStudyForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JapaneseStudyForm_FormClosing);
+            this.panel3.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -218,6 +412,12 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.tlpButtons.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -238,5 +438,17 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.CheckBox cbSmallBrush;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        public System.Windows.Forms.Label lbSource;
+        public System.Windows.Forms.Label lbWord;
+        public System.Windows.Forms.Label lbQuote;
+        public System.Windows.Forms.Label lbDefinitionOrTranslation;
+        public System.Windows.Forms.TableLayoutPanel tlpButtons;
+        public System.Windows.Forms.Button btnMasteryDown;
+        public System.Windows.Forms.Button btnMasteryUp;
+        public System.Windows.Forms.Button btnNext;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        public System.Windows.Forms.Label lblIdMastery;
     }
 }

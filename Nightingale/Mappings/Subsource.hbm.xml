@@ -9,7 +9,7 @@
     </id>
     <property name="Name" />
     <property name="Disabled" />
-    <many-to-one name="Source" class="Source" column="Source_Id"/>
+    <many-to-one name="Source" class="Source" column="Source_Id" lazy="false"/>
     <set name="Links" cascade="all">
       <key>
         <column name="Subsource_Id"/>
