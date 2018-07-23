@@ -135,7 +135,8 @@ CREATE TABLE Link (
   LastStudiedDate TEXT,
   Discriminant TEXT,
   DatumA_Varchar TEXT,
-  DatumB_Varchar TEXT
+  DatumB_Varchar TEXT,
+  ExtraDataA_Varchar TEXT
 );";
         
     }

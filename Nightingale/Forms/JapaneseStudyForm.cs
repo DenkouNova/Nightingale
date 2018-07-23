@@ -178,6 +178,11 @@ namespace Nightingale.Forms
             this.lbWord.Text = word;
             this.lbDefinitionOrTranslation.Text = "";
 
+            this.lblIdMastery.Text = 
+                "ID:" + currentLink.Id + " " +
+                "Mastery:" + (AorBMode == AorB.A_Mode ? currentLink.MasteryAToB : currentLink.MasteryBToA) + " " +
+                currentLink.Discriminant;
+
             btnNext.Visible = true;
             btnMasteryUp.Visible = btnMasteryDown.Visible = false;
             // TODO better logging
@@ -198,6 +203,7 @@ namespace Nightingale.Forms
                 var kanji = currentLink.DatumA;
                 var kana = currentLink.DatumB;
                 word = kanji + "(" + kana + ")";
+                translation = currentLink.ExtraDataA;
             }
             else if (currentLink.Discriminant == "和英")
             {

@@ -16,6 +16,7 @@
     <property name="Discriminant" />
     <property name="DatumA" column="DatumA_Varchar" />
     <property name="DatumB" column="DatumB_Varchar" />
+    <property name="ExtraDataA" column="ExtraDataA_Varchar" />
   </class>
 
 </hibernate-mapping>

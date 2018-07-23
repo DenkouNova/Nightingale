@@ -106,7 +106,7 @@ namespace Nightingale.Parsers
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Kana is not valid. Must be construction a new word. " +
+                            var ex = new Exception("Kana is not valid. Must be constructing a new word. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
@@ -118,14 +118,14 @@ namespace Nightingale.Parsers
                             String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Translation is not valid. Must be construction a new word. " +
+                            var ex = new Exception("Translation is not valid. Must be constructing a new word. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
                         }
                         _translation = contents;
                         // Insert for kana-kanji
-                        var word = new Link(_kanji, _kana);
+                        var word = new Link(_kanji, _kana, _translation);
                         word.Discriminant = "かな漢字";
                         AddNewLink(word);
                         // Insert for 和英

@@ -8,11 +8,12 @@ namespace Nightingale.Domain
     {
         public Link() { }
 
-        public Link(string datumA, string datumB)
+        public Link(string datumA, string datumB, string extraA = "")
         {
             Name = datumA + " → " + datumB;
             DatumA = datumA;
             DatumB = datumB;
+            ExtraDataA = extraA;
         }
 
         public virtual int? Id { get; set; }
@@ -28,5 +29,8 @@ namespace Nightingale.Domain
 
         public virtual string DatumA { get; set; }
         public virtual string DatumB { get; set; }
+
+        public virtual string ExtraDataA { get; set; }
+
     }
 }
