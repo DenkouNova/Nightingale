@@ -218,9 +218,9 @@ namespace Nightingale.Forms
                     // Quote must be stripped of the word we are trying to study.
                     var separationIndex1 = japanese.IndexOf("(");
                     var separationIndex2 = japanese.IndexOf(")");
-                    var kanji = japanese.Substring(0, separationIndex1);
+                    var kanji = japanese.Substring(0, separationIndex1 - 1);
                     var kana = japanese.Substring(separationIndex1 + 1, separationIndex2 - separationIndex1 - 1);
-                    quote = QuoteKanjiToNakatens(quote, japanese, kana);
+                    quote = QuoteKanjiToNakatens(quote, kanji, kana);
                     XtoY = "英→日";
                 }
             }

@@ -131,6 +131,7 @@ namespace Nightingale.Parsers
                         // Insert for 和英
                         var kanaKanji = _kanji + " (" + _kana + ")";
                         word = new Link(kanaKanji, _translation);
+                        word.MasteryAToB = 100; // Cancel the Japanese-to-English translation
                         word.Discriminant = "和英";
                         AddNewLink(word);
                         // Revert to "not currently inserting a word" mode
