@@ -28,7 +28,7 @@ namespace Nightingale.Forms
 
         private FeatherLogger _logger;
 
-        private SQLiteConnection _dbConnection;
+        
 
         private string _location;
 
@@ -40,6 +40,9 @@ namespace Nightingale.Forms
         private Domain.Link CurrentLink;
         private Step CurrentStep;
         private AorB AorBMode = AorB.A_Mode;
+
+        private SQLiteConnection _dbConnection;
+        private NHibernate.ISession _dbSession;
 
         public JapaneseStudyForm(string databasePath)
         {
@@ -60,7 +63,42 @@ namespace Nightingale.Forms
 
         private void JapaneseStudyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _logger.CloseSection(_location);
+            // RENDULA: tester avec DbSession
+            var eventLocation = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+
+            var dialogMessage = "Save before exiting?";
+
+            var result = MessageBox.Show(dialogMessage, "Save?", MessageBoxButtons.YesNoCancel);
+
+            _logger.Info("Result is " + result);
+
+            if (result == DialogResult.Cancel)
+            {
+                e.Cancel = true;
+                //base.OnFormClosing(e);
+            }
+            else
+            {
+                if (result == DialogResult.Yes)
+                {
+                    _dbConnection.Open();
+                    using (var dbSession = NHibernateHelper.GetCustomSession(_dbConnection))
+                    {
+                        foreach (var oneLink in _masteryAtoBLinksToStudy)
+                        {
+                            dbSession.Save(oneLink);
+                        }
+                        foreach (var oneLink in _masteryBtoALinksToStudy)
+                        {
+                            dbSession.Save(oneLink);
+                        }
+                    }
+                    _dbConnection.Close();
+                }
+                _logger.CloseSection(eventLocation);
+                _logger.CloseSection(_location);
+            }
+
         }
 
         private void NextStep()
@@ -120,7 +158,9 @@ namespace Nightingale.Forms
             this.lbWord.Text = currentLink.DatumA;
 
             var quote = subsource.Name;
-            string word;
+            string word = "";
+            string translationOrDefinition = "";
+            string XtoY = "";
             if (currentLink.Discriminant == "かな漢字")
             {
                 var kanji = currentLink.DatumA;
@@ -132,7 +172,7 @@ namespace Nightingale.Forms
                     // Given the kanji, find the kana.
                     word = kanji;
                     // Quote can retain the original kanji.
-                    
+                    XtoY = "漢字→かな";
                 }
                 else
                 {
@@ -141,6 +181,7 @@ namespace Nightingale.Forms
                     word = kana;
                     // Naturally, the kanji must be removed from the quote itself
                     quote = QuoteKanjiToKanas(quote, kanji, kana);
+                    XtoY = "かな→漢字";           
                 }
             }
             else if (currentLink.Discriminant == "和英")
@@ -153,17 +194,19 @@ namespace Nightingale.Forms
                     // Japanese to English
                     word = japanese;
                     // Quote can retain all of its characters.
+                    XtoY = "日→英";
                 }
                 else
                 {
                     // English to Japanese
-                    word = english;
+                    translationOrDefinition = english;
                     // Quote must be stripped of the word we are trying to study.
                     var separationIndex1 = japanese.IndexOf("(");
                     var separationIndex2 = japanese.IndexOf(")");
                     var kanji = japanese.Substring(0, separationIndex1);
                     var kana = japanese.Substring(separationIndex1 + 1, separationIndex2 - separationIndex1 - 1);
                     quote = QuoteKanjiToNakatens(quote, japanese, kana);
+                    XtoY = "英→日";
                 }
             }
             else
@@ -176,12 +219,12 @@ namespace Nightingale.Forms
 
             this.lbQuote.Text = quote;
             this.lbWord.Text = word;
-            this.lbDefinitionOrTranslation.Text = "";
+            this.lbDefinitionOrTranslation.Text = translationOrDefinition;
 
             this.lblIdMastery.Text = 
                 "ID:" + currentLink.Id + " " +
-                "Mastery:" + (AorBMode == AorB.A_Mode ? currentLink.MasteryAToB : currentLink.MasteryBToA) + " " +
-                currentLink.Discriminant;
+                "Lv:" + (AorBMode == AorB.A_Mode ? currentLink.MasteryAToB : currentLink.MasteryBToA) + " " +
+                XtoY;
 
             btnNext.Visible = true;
             btnMasteryUp.Visible = btnMasteryDown.Visible = false;
@@ -238,7 +281,7 @@ namespace Nightingale.Forms
             do
             {
                 // either mastery A or B
-                var AorBRandom = new Random().Next(0, 1);
+                var AorBRandom = new Random().Next(0, 1+1);
                 if (AorBRandom == 0)
                 {
                     AorBMode = AorB.A_Mode;
@@ -454,11 +497,27 @@ namespace Nightingale.Forms
 
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {
+            if (AorBMode == AorB.A_Mode)
+            {
+                CurrentLink.MasteryAToB += 10;
+            }
+            else
+            {
+                CurrentLink.MasteryBToA += 10;
+            }
             NextStep();
         }
 
         private void btnMasteryDown_Click(object sender, EventArgs e)
         {
+            if (AorBMode == AorB.A_Mode)
+            {
+                CurrentLink.MasteryAToB -= 10;
+            }
+            else
+            {
+                CurrentLink.MasteryBToA -= 10;
+            }
             NextStep();
         }
 
@@ -466,7 +525,6 @@ namespace Nightingale.Forms
         {
             NextStep();
         }
-
 
     }
 }
