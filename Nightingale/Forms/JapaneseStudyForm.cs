@@ -28,7 +28,7 @@ namespace Nightingale.Forms
 
         private FeatherLogger _logger;
 
-        
+        private bool _changesOccurred = false;
 
         private string _location;
 
@@ -68,33 +68,48 @@ namespace Nightingale.Forms
 
             var dialogMessage = "Save before exiting?";
 
-            var result = MessageBox.Show(dialogMessage, "Save?", MessageBoxButtons.YesNoCancel);
-
-            _logger.Info("Result is " + result);
-
-            if (result == DialogResult.Cancel)
+            if (_changesOccurred)
             {
-                e.Cancel = true;
-                //base.OnFormClosing(e);
+                var result = MessageBox.Show(dialogMessage, "Save?", MessageBoxButtons.YesNoCancel);
+
+                _logger.Info("Result is " + result);
+
+                if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    //base.OnFormClosing(e);
+                }
+                else
+                {
+
+                    if (result == DialogResult.Yes)
+                    {
+                        using (var tx = _dbSession.BeginTransaction())
+                        {
+                            foreach (var oneLink in _masteryAtoBLinksToStudy)
+                            {
+                                _dbSession.Save(oneLink);
+                            }
+                            foreach (var oneLink in _masteryBtoALinksToStudy)
+                            {
+                                _dbSession.Save(oneLink);
+                            }
+                            tx.Commit();
+                        }
+                    }
+
+                    _dbSession.Close();
+                    _dbConnection.Close();
+
+                    _logger.CloseSection(eventLocation);
+                    _logger.CloseSection(_location);
+                }
             }
             else
             {
-                if (result == DialogResult.Yes)
-                {
-                    _dbConnection.Open();
-                    using (var dbSession = NHibernateHelper.GetCustomSession(_dbConnection))
-                    {
-                        foreach (var oneLink in _masteryAtoBLinksToStudy)
-                        {
-                            dbSession.Save(oneLink);
-                        }
-                        foreach (var oneLink in _masteryBtoALinksToStudy)
-                        {
-                            dbSession.Save(oneLink);
-                        }
-                    }
-                    _dbConnection.Close();
-                }
+                _dbSession.Close();
+                _dbConnection.Close();
+
                 _logger.CloseSection(eventLocation);
                 _logger.CloseSection(_location);
             }
@@ -221,9 +236,21 @@ namespace Nightingale.Forms
             this.lbWord.Text = word;
             this.lbDefinitionOrTranslation.Text = translationOrDefinition;
 
+            int mastery = (AorBMode == AorB.A_Mode ? currentLink.MasteryAToB : currentLink.MasteryBToA);
+            if (mastery < 31)
+            {
+                this.lblIdMastery.BackColor = Color.LightSalmon;
+            } else if (mastery < 61)
+            {
+                this.lblIdMastery.BackColor = Color.LightYellow;
+            }
+            else {
+                this.lblIdMastery.BackColor = Color.LightGreen;
+            }
+
             this.lblIdMastery.Text = 
                 "ID:" + currentLink.Id + " " +
-                "Lv:" + (AorBMode == AorB.A_Mode ? currentLink.MasteryAToB : currentLink.MasteryBToA) + " " +
+                "Lv:" + mastery + " " +
                 XtoY;
 
             btnNext.Visible = true;
@@ -314,29 +341,26 @@ namespace Nightingale.Forms
             _masteryBtoALinksToStudy = new List<Domain.Link>();
 
             _dbConnection.Open();
-            using (var dbSession = NHibernateHelper.GetCustomSession(_dbConnection))
-            {
-                var allLinks = dbSession.Query<Domain.Link>().ToList();
+            _dbSession = NHibernateHelper.GetCustomSession(_dbConnection);
 
-                foreach(var oneLink in allLinks)
+            var allLinks = _dbSession.Query<Domain.Link>().ToList();
+
+            foreach(var oneLink in allLinks)
+            {
+                if (oneLink.Disabled == 0)
                 {
-                    if (oneLink.Disabled == 0)
+                    if (oneLink.MasteryAToB < 100)
                     {
-                        if (oneLink.MasteryAToB < 100)
-                        {
-                            // _masteryAtoBLinksToStudy.Add(oneLink.Id.Value, oneLink);
-                            _masteryAtoBLinksToStudy.Add(oneLink);
-                        }
-                        if (oneLink.MasteryBToA < 100)
-                        {
-                            // _masteryBtoALinksToStudy.Add(oneLink.Id.Value, oneLink);
-                            _masteryBtoALinksToStudy.Add(oneLink);
-                        }
+                        // _masteryAtoBLinksToStudy.Add(oneLink.Id.Value, oneLink);
+                        _masteryAtoBLinksToStudy.Add(oneLink);
+                    }
+                    if (oneLink.MasteryBToA < 100)
+                    {
+                        // _masteryBtoALinksToStudy.Add(oneLink.Id.Value, oneLink);
+                        _masteryBtoALinksToStudy.Add(oneLink);
                     }
                 }
-                
             }
-            _dbConnection.Close();
             _logger.CloseSection(_location);
         }
 
@@ -497,6 +521,7 @@ namespace Nightingale.Forms
 
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {
+            _changesOccurred = true;
             if (AorBMode == AorB.A_Mode)
             {
                 CurrentLink.MasteryAToB += 10;
@@ -510,6 +535,7 @@ namespace Nightingale.Forms
 
         private void btnMasteryDown_Click(object sender, EventArgs e)
         {
+            _changesOccurred = true;
             if (AorBMode == AorB.A_Mode)
             {
                 CurrentLink.MasteryAToB -= 10;

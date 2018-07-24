@@ -184,6 +184,7 @@ namespace Nightingale
 
             _logger.CloseSection(location);
             form.ShowDialog();
+            this.Close();
         }
 
     }
