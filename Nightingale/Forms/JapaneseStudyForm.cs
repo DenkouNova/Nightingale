@@ -24,13 +24,19 @@ namespace Nightingale.Forms
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
-
+        private int STARTING_NUMBER_OF_LINKS_LOADED = 200;
+        private int LINK_ADD_ON_UP = 3;
+        private int LINK_REMOVE_ON_DOWN = 1;
 
         private FeatherLogger _logger;
 
         private bool _changesOccurred = false;
 
         private string _location;
+
+        private int _numberOfTotalLinks;
+        private int _numberOfMasteredLinks;
+        private int _numberOfCurrentLinks;
 
         //private Dictionary<int, Domain.Link> _masteryAtoBLinksToStudy;
         //private Dictionary<int, Domain.Link> _masteryBtoALinksToStudy;
@@ -57,13 +63,21 @@ namespace Nightingale.Forms
 
             InitializeComponent();
             LoadAllWords();
+            UpdateLabelsOneTimeOnly();
+
+            _numberOfCurrentLinks = STARTING_NUMBER_OF_LINKS_LOADED;
 
             NextStep();
         }
 
+        private void UpdateLabelsOneTimeOnly()
+        {
+            this.lbTotalWords.Text = "Total links: " + _numberOfTotalLinks;
+            this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredLinks;
+        }
+
         private void JapaneseStudyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // RENDULA: tester avec DbSession
             var eventLocation = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
 
             var dialogMessage = "Save before exiting?";
@@ -77,7 +91,6 @@ namespace Nightingale.Forms
                 if (result == DialogResult.Cancel)
                 {
                     e.Cancel = true;
-                    //base.OnFormClosing(e);
                 }
                 else
                 {
@@ -118,6 +131,7 @@ namespace Nightingale.Forms
 
         private void NextStep()
         {
+            UpdateEveryStepLabels();
             CurrentStep = DetermineNextStep();
             switch (CurrentStep)
             {
@@ -312,13 +326,16 @@ namespace Nightingale.Forms
                 if (AorBRandom == 0)
                 {
                     AorBMode = AorB.A_Mode;
-                    var randomA = new Random().Next(0, _masteryAtoBLinksToStudy.Count - 1);
+
+                    var maxId = Math.Min((int)_numberOfCurrentLinks / 2, _masteryAtoBLinksToStudy.Count - 1);
+                    var randomA = new Random().Next(0, maxId - 1);
                     returnedLink = _masteryAtoBLinksToStudy[randomA];
                 }
                 else
                 {
                     AorBMode = AorB.B_Mode;
-                    var randomB = new Random().Next(0, _masteryBtoALinksToStudy.Count - 1);
+                    var maxId = Math.Min((int)_numberOfCurrentLinks / 2, _masteryBtoALinksToStudy.Count - 1);
+                    var randomB = new Random().Next(0, maxId);
                     returnedLink = _masteryBtoALinksToStudy[randomB];
                 }
             }
@@ -335,8 +352,6 @@ namespace Nightingale.Forms
             _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(_location);
 
-            // _masteryAtoBLinksToStudy = new Dictionary<int, Domain.Link>();
-            // _masteryBtoALinksToStudy = new Dictionary<int, Domain.Link>();
             _masteryAtoBLinksToStudy = new List<Domain.Link>();
             _masteryBtoALinksToStudy = new List<Domain.Link>();
 
@@ -349,15 +364,30 @@ namespace Nightingale.Forms
             {
                 if (oneLink.Disabled == 0)
                 {
-                    if (oneLink.MasteryAToB < 100)
+                    if (oneLink.MasteryAToB >= 0)
                     {
-                        // _masteryAtoBLinksToStudy.Add(oneLink.Id.Value, oneLink);
-                        _masteryAtoBLinksToStudy.Add(oneLink);
+                        _numberOfTotalLinks++;
+                        if (oneLink.MasteryAToB < 100)
+                        {
+                            _masteryAtoBLinksToStudy.Add(oneLink);
+                        }
+                        else
+                        {
+                            _numberOfMasteredLinks++;
+                        }
                     }
-                    if (oneLink.MasteryBToA < 100)
+
+                    if (oneLink.MasteryBToA >= 0)
                     {
-                        // _masteryBtoALinksToStudy.Add(oneLink.Id.Value, oneLink);
-                        _masteryBtoALinksToStudy.Add(oneLink);
+                        _numberOfTotalLinks++;
+                        if (oneLink.MasteryBToA < 100)
+                        {
+                            _masteryBtoALinksToStudy.Add(oneLink);
+                        }
+                        else
+                        {
+                            _numberOfMasteredLinks++;
+                        }
                     }
                 }
             }
@@ -530,6 +560,7 @@ namespace Nightingale.Forms
             {
                 CurrentLink.MasteryBToA += 10;
             }
+            _numberOfCurrentLinks += LINK_ADD_ON_UP;
             NextStep();
         }
 
@@ -544,7 +575,13 @@ namespace Nightingale.Forms
             {
                 CurrentLink.MasteryBToA -= 10;
             }
+            _numberOfCurrentLinks -= LINK_REMOVE_ON_DOWN;
             NextStep();
+        }
+
+        private void UpdateEveryStepLabels()
+        {
+            this.lbTotalDisplayedWords.Text = "Displayed links: " + _numberOfCurrentLinks;
         }
 
         private void btnNext_Click(object sender, EventArgs e)
