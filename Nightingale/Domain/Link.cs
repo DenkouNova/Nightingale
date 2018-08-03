@@ -16,7 +16,7 @@ namespace Nightingale.Domain
             ExtraDataA = extraA;
         }
 
-        public virtual int? Id { get; set; }
+        public virtual int Id { get; set; }
         public virtual string Name { get; set; }
         public virtual int Disabled { get; set; }
 
