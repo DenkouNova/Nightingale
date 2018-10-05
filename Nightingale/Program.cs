@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Globalization;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
@@ -43,7 +44,7 @@ namespace Nightingale
                 }
                 else if (key == "GoodAnswerPrct")
                 {
-                    GlobalObjects.GoodAnswerPrct = Convert.ToDouble(value);
+                    GlobalObjects.GoodAnswerPrct = double.Parse(value, CultureInfo.InvariantCulture);
                 }
                 else if (key == "BadAnswerPoints")
                 {
@@ -51,7 +52,39 @@ namespace Nightingale
                 }
                 else if (key == "BadAnswerPrct")
                 {
-                    GlobalObjects.BadAnswerPrct = Convert.ToDouble(value);
+                    GlobalObjects.BadAnswerPrct = double.Parse(value, CultureInfo.InvariantCulture);
+                }
+                else if (key == "GoodAnswerPoints")
+                {
+                    GlobalObjects.GoodAnswerPoints = Convert.ToInt32(value);
+                }
+                else if (key == "BadAnswerPoints")
+                {
+                    GlobalObjects.BadAnswerPoints = Convert.ToInt32(value);
+                }
+                else if (key == "GoodAnswerPrct")
+                {
+                    GlobalObjects.GoodAnswerPrct = double.Parse(value, CultureInfo.InvariantCulture);
+                }
+                else if (key == "BadAnswerPrct")
+                {
+                    GlobalObjects.BadAnswerPrct = double.Parse(value, CultureInfo.InvariantCulture);
+                }
+                else if (key == "TraceLevel")
+                {
+                    FeatherLoggerTraceLevel ParsedValue = (FeatherLoggerTraceLevel)
+                        Enum.Parse(typeof(FeatherLoggerTraceLevel), value, true);
+                    GlobalObjects.FeatherLoggerTraceLevel = ParsedValue;
+                }
+                else if (key == "LogMode")
+                {
+                    FeatherLoggerLogMode ParsedValue = (FeatherLoggerLogMode)
+                        Enum.Parse(typeof(FeatherLoggerLogMode), value, true);
+                    GlobalObjects.FeatherLoggerMode = ParsedValue;
+                }
+                else if (key == "FolderName")
+                {
+                    GlobalObjects.FolderName = value;
                 }
                 else
                 {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Drawing;
 using System.Reflection;
 using Nightingale.Forms;
-//using Nightingale.Parsers;
+using Nightingale.Parsers;
 using System.Configuration;
 using System.Windows.Forms;
 using System.ComponentModel;
@@ -125,15 +125,39 @@ namespace Nightingale
             }
             else
             {
-                /*
-                var jpParser = new JapaneseParser();
-                var importSuccess = jpParser.ImportFile(copyDatabasePath, importedFilePath);
+                AbstractParser parser;
+                using (StreamReader sReader = new StreamReader(importedFilePath))
+                {
+                    string wordStyleString = ":WordStyle=";
+                    var firstLine = sReader.ReadLine();
+                    if (firstLine.Substring(0, 11) != wordStyleString)
+                    {
+                        var errorMessage = "First line of file must start with ':WordStyle='.";
+                        throw new Exception(_logger.Error(errorMessage));
+                    }
+                    var wordStyle = firstLine.Substring(wordStyleString.Length);
+                    if (wordStyle == "Takoboto")
+                    {
+                        parser = new TakobotoParser();
+                    }
+                    else
+                    {
+                        var errorMessage = "Word style '" + wordStyle + "' is invalid.";
+                        throw new Exception(_logger.Error(errorMessage));
+                    }
+                }
+
+                var importSuccess = parser.ImportFile(copyDatabasePath, importedFilePath);
                 if (importSuccess)
                 {
                     dbCopier.RestoreFile();
                     MessageBox.Show(_logger.Info("Success!"));
                 }
-                 * */
+                else
+                {
+                    var errorMessage = "Parsing failed. Some error happened, apparently";
+                    MessageBox.Show(_logger.Error(errorMessage));
+                }
             }
 
             _logger.CloseSection(location);

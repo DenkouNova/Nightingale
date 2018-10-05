@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                  assembly="Nightingale"
+                  namespace="Nightingale.Domain">
+
+  <class name="Word" table="Words">
+    <id name="Id">
+      <generator class="increment" />
+    </id>
+    <property name="Kanji" />
+    <property name="Kana" />
+    <property name="Translation" />
+    <property name="ReadingMastery" />
+    <property name="TranslationMastery" />
+    <property name="KanjiMastery" />
+    <property name="Stars" />
+    <property name="LastStudied" />
+    <property name="Disabled" />
+    <many-to-one name="Quote" class="Quote" column="Quote_Id"/>
+  </class>
+
+</hibernate-mapping>
