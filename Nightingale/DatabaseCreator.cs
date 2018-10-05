@@ -53,11 +53,9 @@ namespace Nightingale
                 connection.Open();
 
                 string[] createTableStatements = {
-                    CREATE_TABLE_CATEGORY,
-                    CREATE_TABLE_SUBCATEGORY,
-                    CREATE_TABLE_SOURCE,
-                    CREATE_TABLE_SUBSOURCE,
-                    CREATE_TABLE_LINK };
+                    CREATE_TABLE_QUOTES,
+                    CREATE_TABLE_WORDS,
+                    CREATE_TABLE_SOURCES };
 
                 foreach (var createOneTable in createTableStatements)
                 {
@@ -93,50 +91,36 @@ namespace Nightingale
             
         }
 
-        private const string CREATE_TABLE_CATEGORY = @"
-CREATE TABLE Category (
-  Id INTEGER,
-  Name TEXT,
-  Disabled INTEGER  
+        private const string CREATE_TABLE_SOURCES = @"
+CREATE TABLE Sources (
+  Id INTEGER NOT NULL,
+  Text TEXT NOT NULL,
+  PRIMARY KEY('Id') 
 );";
 
-        private const string CREATE_TABLE_SUBCATEGORY = @"
-CREATE TABLE SubCategory (
-  Id INTEGER,
-  Name TEXT,
-  Disabled INTEGER,
-  Category_Id INTEGER
+        private const string CREATE_TABLE_QUOTES = @"
+CREATE TABLE Quotes (
+  Id INTEGER NOT NULL,
+  Character TEXT,
+  Text TEXT NOT NULL,
+  Source_Id INTEGER,
+  PRIMARY KEY('Id') 
 );";
 
-        private const string CREATE_TABLE_SOURCE = @"
-CREATE TABLE Source (
-  Id INTEGER,
-  Name TEXT,
-  Disabled INTEGER,
-  SubCategory_Id INTEGER
-);";
-
-        private const string CREATE_TABLE_SUBSOURCE = @"
-CREATE TABLE SubSource (
-  Id INTEGER,
-  Name TEXT,
-  Disabled INTEGER,
-  Source_Id INTEGER
-);";
-
-        private const string CREATE_TABLE_LINK = @"
-CREATE TABLE Link (
-  Id INTEGER,
-  Name TEXT,
-  Disabled INTEGER,
-  SubSource_Id INTEGER,
-  MasteryAToB INTEGER,
-  MasteryBToA INTEGER,
-  LastStudiedDate TEXT,
-  Discriminant TEXT,
-  DatumA_Varchar TEXT,
-  DatumB_Varchar TEXT,
-  ExtraDataA_Varchar TEXT
+        private const string CREATE_TABLE_WORDS = @"
+CREATE TABLE Words (
+  Id INTEGER NOT NULL,
+  Kanji TEXT,
+  Kana TEXT NOT NULL,
+  Translation TEXT NOT NULL,
+  ReadingMastery INTEGER NOT NULL DEFAULT '0',
+  TranslationMastery INTEGER NOT NULL DEFAULT '0',
+  KanjiMastery INTEGER NOT NULL DEFAULT '0',
+  Stars INTEGER NOT NULL DEFAULT '0',
+  LastStudied TEXT,
+  Quote_ID INTEGER,
+  Disabled INTEGER NOT NULL DEFAULT '0',
+  PRIMARY KEY('Id')
 );";
         
     }

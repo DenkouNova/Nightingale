@@ -56,5 +56,16 @@ namespace Nightingale
             }
             return dbCreator;            
         }
+
+
+
+
+        public static int GoodAnswerPoints { get; set; }
+        public static double GoodAnswerPrct { get; set; }
+        public static int BadAnswerPoints { get; set; }
+        public static double BadAnswerPrct { get; set; }
+
+
+
     }
 }

@@ -17,6 +17,7 @@ namespace Nightingale.Forms
 {
     public partial class JapaneseStudyForm : Form
     {
+        /*
         [DllImport("user32.dll", EntryPoint = "FindWindow")]
         private static extern IntPtr FindWindow(string lp1, string lp2);
 
@@ -49,9 +50,11 @@ namespace Nightingale.Forms
 
         private SQLiteConnection _dbConnection;
         private NHibernate.ISession _dbSession;
+        */
 
         public JapaneseStudyForm(string databasePath)
         {
+            /*
             _logger = GlobalObjects.Logger;
 
             _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
@@ -60,24 +63,27 @@ namespace Nightingale.Forms
             _logger.Info("Creating new DB connection");
             _dbConnection = new SQLiteConnection("Data Source = " + databasePath);
             _logger.Info("Connection created");
-
+            */
             InitializeComponent();
-            LoadAllWords();
+            /*LoadAllWords();
             UpdateLabelsOneTimeOnly();
 
             _numberOfCurrentLinks = STARTING_NUMBER_OF_LINKS_LOADED;
 
             NextStep();
+             * */
         }
 
+        /*
         private void UpdateLabelsOneTimeOnly()
         {
             this.lbTotalWords.Text = "Total links: " + _numberOfTotalLinks;
             this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredLinks;
         }
-
+        */
         private void JapaneseStudyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            /*
             var eventLocation = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
 
             var dialogMessage = "Save before exiting?";
@@ -126,9 +132,9 @@ namespace Nightingale.Forms
                 _logger.CloseSection(eventLocation);
                 _logger.CloseSection(_location);
             }
-
+            */
         }
-
+        /*
         private void NextStep()
         {
             UpdateEveryStepLabels();
@@ -396,21 +402,21 @@ namespace Nightingale.Forms
 
 
 
-
+        */
         private void btnPaint_Click(object sender, EventArgs e)
         {
+            /*
             bool changedPaintBrush = false;
             int maxNumberOfTimes = 10;
             int currentNumberOfTimes = 0;
 
             // TODO: this is only in kill-new mode
-            /*
-            foreach (Process proc in Process.GetProcessesByName("mspaint"))
-            {
-                proc.Kill();
-            }
-            System.Diagnostics.Process.Start("mspaint.exe");
-            */
+            //foreach (Process proc in Process.GetProcessesByName("mspaint"))
+            //{
+            //    proc.Kill();
+            //}
+            //System.Diagnostics.Process.Start("mspaint.exe");
+            
 
             // new window in existing mspaint
             if (Process.GetProcessesByName("mspaint").Count() == 0)
@@ -435,9 +441,10 @@ namespace Nightingale.Forms
 
                 currentNumberOfTimes++;
             }
-
+            */
         }
 
+        /*
         private bool ChangePaintBrush(IntPtr handle)
         {
             if (SetForegroundWindow(handle))
@@ -548,9 +555,10 @@ namespace Nightingale.Forms
 
             Error
         }
-
+        */
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {
+            /*
             _changesOccurred = true;
             if (AorBMode == AorB.A_Mode)
             {
@@ -562,10 +570,12 @@ namespace Nightingale.Forms
             }
             _numberOfCurrentLinks += LINK_ADD_ON_UP;
             NextStep();
+             * */
         }
 
         private void btnMasteryDown_Click(object sender, EventArgs e)
         {
+            /*
             _changesOccurred = true;
             if (AorBMode == AorB.A_Mode)
             {
@@ -576,18 +586,17 @@ namespace Nightingale.Forms
                 CurrentLink.MasteryBToA -= 10;
             }
             _numberOfCurrentLinks -= LINK_REMOVE_ON_DOWN;
-            NextStep();
+            NextStep();*/
         }
 
         private void UpdateEveryStepLabels()
         {
-            this.lbTotalDisplayedWords.Text = "Displayed links: " + _numberOfCurrentLinks;
+            //this.lbTotalDisplayedWords.Text = "Displayed links: " + _numberOfCurrentLinks;
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            NextStep();
+            //NextStep();
         }
-
     }
 }

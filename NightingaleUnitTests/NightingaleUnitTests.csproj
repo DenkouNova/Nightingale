@@ -105,7 +105,6 @@
     <Compile Include="GivenADatabaseCopier.cs" />
     <Compile Include="GivenADatabaseCreator.cs" />
     <Compile Include="GivenAFeatherLogger.cs" />
-    <Compile Include="GivenAJapaneseParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestHelpers.cs" />
   </ItemGroup>

@@ -50,7 +50,7 @@ namespace NightingaleUnitTests
             using (var connection = new SQLiteConnection("Data Source=" + _databasePath + ";Version=3;"))
             {
                 connection.Open();
-                string[] tablesToVerify = { "Category", "SubCategory", "Source", "SubSource", "Link" };
+                string[] tablesToVerify = { "Quotes", "Sources", "Words" };
 
                 foreach(string oneTable in tablesToVerify)
                 {

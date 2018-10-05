@@ -36,24 +36,29 @@ namespace Nightingale
             {
                 var key = oneKeyValuePair.Key;
                 var value = oneKeyValuePair.Value;
-                if (key == "LogMode")
+
+                if (key == "GoodAnswerPoints")
                 {
-                    GlobalObjects.FeatherLoggerMode = (FeatherLoggerLogMode)
-                        Enum.Parse(typeof(FeatherLoggerLogMode), value);
+                    GlobalObjects.GoodAnswerPoints = Convert.ToInt32(value);
                 }
-                else if (key == "TraceLevel")
+                else if (key == "GoodAnswerPrct")
                 {
-                    GlobalObjects.FeatherLoggerTraceLevel = (FeatherLoggerTraceLevel)
-                        Enum.Parse(typeof(FeatherLoggerTraceLevel), value);
+                    GlobalObjects.GoodAnswerPrct = Convert.ToDouble(value);
                 }
-                else if (key == "FolderName")
+                else if (key == "BadAnswerPoints")
                 {
-                    GlobalObjects.FolderName = value;
+                    GlobalObjects.BadAnswerPoints = Convert.ToInt32(value);
+                }
+                else if (key == "BadAnswerPrct")
+                {
+                    GlobalObjects.BadAnswerPrct = Convert.ToDouble(value);
                 }
                 else
                 {
                     throw new ArgumentOutOfRangeException("Invalid key '" + key + "' found in ini file");
                 }
+
+
             }
         }
 
