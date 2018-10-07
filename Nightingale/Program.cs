@@ -72,9 +72,7 @@ namespace Nightingale
                 }
                 else if (key == "TraceLevel")
                 {
-                    FeatherLoggerTraceLevel ParsedValue = (FeatherLoggerTraceLevel)
-                        Enum.Parse(typeof(FeatherLoggerTraceLevel), value, true);
-                    GlobalObjects.FeatherLoggerTraceLevel = ParsedValue;
+                    
                 }
                 else if (key == "LogMode")
                 {
@@ -85,6 +83,12 @@ namespace Nightingale
                 else if (key == "FolderName")
                 {
                     GlobalObjects.FolderName = value;
+                }
+                else if (key == "Language")
+                {
+                    WindowsLanguage ParsedValue = (WindowsLanguage)
+                        Enum.Parse(typeof(WindowsLanguage), value, true);
+                    GlobalObjects.Language = ParsedValue;
                 }
                 else
                 {

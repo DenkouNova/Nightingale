@@ -9,6 +9,7 @@ namespace Nightingale
     {
         public static FeatherLoggerLogMode FeatherLoggerMode { get; set; }
         public static FeatherLoggerTraceLevel FeatherLoggerTraceLevel { get; set; }
+        public static WindowsLanguage Language { get; set; }
         public static string FolderName { get; set; }
 
         private static FeatherLogger _logger = null;
@@ -63,9 +64,13 @@ namespace Nightingale
         public static int GoodAnswerPoints { get; set; }
         public static double GoodAnswerPrct { get; set; }
         public static int BadAnswerPoints { get; set; }
-        public static double BadAnswerPrct { get; set; }
+        public static double BadAnswerPrct { get; set; }       
 
+    }
 
-
+    public enum WindowsLanguage
+    {
+        EN,
+        FR
     }
 }
