@@ -24,10 +24,53 @@ namespace Nightingale.Forms
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        private int STARTING_NUMBER_OF_WORDS_LOADED = 200;
+        private int LINK_ADD_ON_UP = 3;
+        private int LINK_REMOVE_ON_DOWN = 1;
+
+        private FeatherLogger _logger;
+
+        //private bool _changesOccurred = false;
+
+        private string _location;
+
+        private int _numberOfTotalWords;
+        private int _numberOfMasteredWords;
+        private int _numberOfCurrentWords;
+
+        private List<Domain.Word> _wordsToStudy;
+
+        //private Domain.Link CurrentLink;
+        //private Step CurrentStep;
+        //private AorB AorBMode = AorB.A_Mode;
+
+        private SQLiteConnection _dbConnection;
+        private NHibernate.ISession _dbSession;
 
         public JapaneseStudyForm(string databasePath)
         {
+            _logger = GlobalObjects.Logger;
+
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            _logger.Info("Creating new DB connection");
+            _dbConnection = new SQLiteConnection("Data Source = " + databasePath);
+            _logger.Info("Connection created");
+
             InitializeComponent();
+            LoadAllWords();
+            UpdateLabelsOneTimeOnly();
+
+            _numberOfCurrentWords = Math.Min(_numberOfTotalWords, STARTING_NUMBER_OF_WORDS_LOADED);
+
+            //NextStep();
+        }
+
+        private void UpdateLabelsOneTimeOnly()
+        {
+            this.lbTotalWords.Text = "Total links: " + _numberOfTotalWords;
+            this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredWords;
         }
 
         private void KillExistingPaintWindowAndStartANewOne()
@@ -90,14 +133,40 @@ namespace Nightingale.Forms
 
         }
 
+        private void LoadAllWords()
+        {
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            _wordsToStudy = new List<Domain.Word>();
+
+            _dbConnection.Open();
+            _dbSession = NHibernateHelper.GetCustomSession(_dbConnection);
+
+            var allWords = _dbSession.Query<Domain.Word>().ToList();
+
+            foreach (var oneWord in allWords)
+            {
+                if (oneWord.Disabled == 0 && !oneWord.IsMastered)
+                {
+                    _numberOfTotalWords++;
+                    if (!oneWord.IsMastered)
+                    {
+                        _wordsToStudy.Add(oneWord);
+                    }
+                    else
+                    {
+                        _numberOfMasteredWords++;
+                    }
+                }
+            }
+            _logger.CloseSection(_location);
+        }
 
         private void btnPaint_Click(object sender, EventArgs e)
         {
             KillExistingPaintWindowAndStartANewOne();
         }
-
-        
-
 
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {

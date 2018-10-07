@@ -28,6 +28,13 @@ namespace Nightingale.Domain
         public virtual int Disabled { get; set; }
         public virtual Quote Quote { get; set; }
 
+        public virtual bool IsMastered { get {
+            return ReadingMastery >= 100 &&
+            TranslationMastery >= 100 &&
+            KanjiMastery >= 100;
+        }}
+            
+
         public override string ToString()
         {
             return "Id = " + FeatherStrings.TraceString(Id) +
