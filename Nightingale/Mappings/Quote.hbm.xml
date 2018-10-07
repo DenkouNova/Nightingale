@@ -9,7 +9,7 @@
     </id>
     <property name="Text" />
     <property name="Character" />
-    <set name="Words" inverse="true" cascade="all">
+    <set name="Words" cascade="all">
       <key>
         <column name="Quote_Id"/>
       </key>

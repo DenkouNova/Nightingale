@@ -61,15 +61,18 @@ namespace Nightingale
                 {
                     CreateTable(createOneTable, connection);
                 }
+
+                CreateTable(ALL_DATA_VIEW, connection, "view");
+
                 connection.Close();
             }
 
             _logger.CloseSection(location);
         }
 
-        private void CreateTable(string query, SQLiteConnection connection)
+        private void CreateTable(string query, SQLiteConnection connection, string objectType = "table")
         {
-            _logger.Info("Creating table with the following query:");
+            _logger.Info("Creating " + objectType + " with the following query:");
             foreach (string oneLine in Regex.Split(query, "\r\n|\r|\n"))
             {
                 _logger.Info(oneLine);
@@ -81,7 +84,7 @@ namespace Nightingale
                 {
                     command.ExecuteNonQuery();
                 }
-                _logger.Info("Table created.");
+                _logger.Info("Created " + objectType + ".");
             }
             catch (Exception ex)
             {
@@ -125,6 +128,21 @@ CREATE TABLE Words (
   Disabled INTEGER NOT NULL DEFAULT '0',
   PRIMARY KEY('Id')
 );";
+
+
+
+
+        private const string ALL_DATA_VIEW = @"
+CREATE VIEW all_data
+AS
+SELECT
+  s.Id AS Source_Id, s.Text AS Source_Text,
+  q.Id AS Quote_Id, q.Character, q.Text AS Quote_Text,
+  w.Id AS Word_Id, w.Kanji, w.Kana, w.Translation
+FROM Sources s
+  JOIN Quotes q ON q.Source_Id = s.Id
+  JOIN Words w ON w.Quote_Id = q.id
+;";
         
     }
 }

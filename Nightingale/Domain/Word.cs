@@ -7,7 +7,14 @@ namespace Nightingale.Domain
 
     public class Word
     {
-        public Word() { }
+        protected Word() { }
+
+        public Word(string kanji, string kana, string translation)
+        {
+            Kanji = kanji;
+            Kana = kana;
+            Translation = translation;
+        }
 
         public virtual int Id { get; set; }
         public virtual string Kanji { get; set; }

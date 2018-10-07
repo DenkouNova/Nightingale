@@ -89,6 +89,7 @@ namespace Nightingale.Parsers
                 {
                     case LineTypeEnum.Nothing:
                     case LineTypeEnum.Comment:
+                    case LineTypeEnum.Romaji:
                         break;
                     case LineTypeEnum.Source:
                         _logger.Info("Adding new source '" + contents + "'");
@@ -103,12 +104,10 @@ namespace Nightingale.Parsers
                         var quote = new Domain.Quote(character, quoteText);
                         AddNewQuote(quote);
                         break;
-                        /*
-                    case JapaneseParserLineType.Subsource:
-                        _logger.Info("Adding new subsource '" + contents + "'");
-                        AddNewSubsource(new Domain.Subsource(contents));
-                        break;
-                    case JapaneseParserLineType.Kanji:
+
+                        ///////////////////////////////
+
+                    case LineTypeEnum.Kanji:
                         if (!String.IsNullOrEmpty(_kanji) ||
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
@@ -120,7 +119,7 @@ namespace Nightingale.Parsers
                         }
                         _kanji = contents;
                         break;
-                    case JapaneseParserLineType.Kana:
+                    case LineTypeEnum.Kana:
                         if (String.IsNullOrEmpty(_kanji) ||
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
@@ -132,7 +131,7 @@ namespace Nightingale.Parsers
                         }
                         _kana = contents;
                         break;
-                    case JapaneseParserLineType.Translation:
+                    case LineTypeEnum.Translation:
                         if (String.IsNullOrEmpty(_kanji) ||
                             String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
@@ -143,20 +142,15 @@ namespace Nightingale.Parsers
                             throw ex;
                         }
                         _translation = contents;
-                        // Insert for kana-kanji
-                        var word = new Link(_kanji, _kana, _translation);
-                        word.Discriminant = "かな漢字";
-                        AddNewLink(word);
-                        // Insert for 和英
-                        var kanaKanji = _kanji + " (" + _kana + ")";
-                        word = new Link(kanaKanji, _translation);
-                        word.MasteryAToB = 100; // Cancel the Japanese-to-English translation
-                        word.Discriminant = "和英";
-                        AddNewLink(word);
+
+                        var word = new Nightingale.Domain.Word(_kanji, _kana, _translation);
+                        AddNewWord(word);
+
                         // Revert to "not currently inserting a word" mode
                         _kanji = _kana = _translation = null;
                         break;
-                         * */
+
+                    ///////////////////////////////
                 }
                 lastLineType = lineType;
 
@@ -214,12 +208,7 @@ namespace Nightingale.Parsers
                 return ReturnParse(LineTypeEnum.Romaji, line);
 
             if (lastLineType == LineTypeEnum.Romaji)
-                return ReturnParse(LineTypeEnum.Romaji, line);
-
-
-            // temporary
-            return ReturnParse(LineTypeEnum.Comment, null);
-
+                return ReturnParse(LineTypeEnum.Translation, line);
 
             var ex = new Exception("Could not parse line: '" + line + "'");
             _logger.Error(ex);
