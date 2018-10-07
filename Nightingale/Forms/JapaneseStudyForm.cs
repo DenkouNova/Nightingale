@@ -25,12 +25,12 @@ namespace Nightingale.Forms
         private static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private int STARTING_NUMBER_OF_WORDS_LOADED = 200;
-        private int LINK_ADD_ON_UP = 3;
-        private int LINK_REMOVE_ON_DOWN = 1;
+        private int WORD_ADD_ON_UP = 3; // TODO have in an ini file
+        private int WORD_REMOVE_ON_DOWN = 1;
 
         private FeatherLogger _logger;
 
-        //private bool _changesOccurred = false;
+        private bool _changesOccurred;
 
         private string _location;
 
@@ -40,9 +40,9 @@ namespace Nightingale.Forms
 
         private List<Domain.Word> _wordsToStudy;
 
-        //private Domain.Link CurrentLink;
-        //private Step CurrentStep;
-        //private AorB AorBMode = AorB.A_Mode;
+        private Domain.Word CurrentWord;
+        private Step CurrentStep;
+        private StudyingType CurrentStudyingType;
 
         private SQLiteConnection _dbConnection;
         private NHibernate.ISession _dbSession;
@@ -64,13 +64,244 @@ namespace Nightingale.Forms
 
             _numberOfCurrentWords = Math.Min(_numberOfTotalWords, STARTING_NUMBER_OF_WORDS_LOADED);
 
-            //NextStep();
+            NextStep();
         }
 
         private void UpdateLabelsOneTimeOnly()
         {
             this.lbTotalWords.Text = "Total links: " + _numberOfTotalWords;
             this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredWords;
+        }
+
+        private void NextStep()
+        {
+            UpdateEveryStepLabels();
+            CurrentStep = DetermineNextStep();
+            switch (CurrentStep)
+            {
+                case Step.Question:
+                    CurrentWord = GetOneWord(CurrentWord);
+                    DisplayOneQuestionWord(CurrentWord);
+                    break;
+                case Step.Answer:
+                    DisplayOneAnswerWord(CurrentWord);
+                    break;
+                default:
+                    var ex = new Exception("Invalid step '" + CurrentStep + "'. Aborting all the things");
+                    _logger.Error(ex);
+                    throw ex;
+            }
+        }
+
+        private Domain.Word GetOneWord(Domain.Word currentWord)
+        {
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            Domain.Word returnedWord;
+
+            do
+            {
+                var maxId = Math.Min((int)_numberOfCurrentWords / 2, _wordsToStudy.Count - 1);
+                var randomWordPosition = new Random().Next(0, maxId);
+                returnedWord = _wordsToStudy[randomWordPosition];
+            }
+            while (currentWord != null && currentWord.Id == returnedWord.Id);
+
+            // TODO better logging
+            _logger.CloseSection(_location);
+            return returnedWord;
+        }
+
+        private void DisplayOneQuestionWord(Domain.Word currentWord)
+        {
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            var currentQuote = currentWord.Quote;
+            var currentSource = currentQuote.Source;
+
+            // Colored mastery rectangle
+
+            CurrentStudyingType =
+                currentWord.ReadingMastery <= 100 ? StudyingType.Reading :
+                currentWord.KanjiMastery <= 100 ? StudyingType.Kanji :
+                StudyingType.Translation;
+
+            /*
+            if (mastery < 31)
+            {
+                this.lblIdMastery.BackColor = Color.LightSalmon;
+            }
+            else if (mastery < 61)
+            {
+                this.lblIdMastery.BackColor = Color.LightYellow;
+            }
+            else
+            {
+                this.lblIdMastery.BackColor = Color.LightGreen;
+            }
+            */
+
+            if (CurrentStudyingType == StudyingType.Reading)
+            {
+                this.lblIdMastery.BackColor = Color.LightSalmon;
+            }
+            else if (CurrentStudyingType == StudyingType.Kanji)
+            {
+                this.lblIdMastery.BackColor = Color.LightYellow;
+            }
+            else
+            {
+                this.lblIdMastery.BackColor = Color.LightGreen;
+            }
+
+            var mastery =
+                currentWord.ReadingMastery <= 100 ? currentWord.ReadingMastery :
+                currentWord.KanjiMastery <= 100 ? currentWord.KanjiMastery :
+                currentWord.TranslationMastery;
+
+            this.lblIdMastery.Text =
+                "ID:" + currentWord.Id + " " +
+                "Lv:" + mastery;
+
+            // Source
+
+            this.lbSource.Text = "「" + currentSource.Text + "」より";
+
+            // Word
+
+            var wordOnTop = 
+                CurrentStudyingType == StudyingType.Reading ? currentWord.Kanji :
+                CurrentStudyingType == StudyingType.Kanji ? currentWord.Kana :
+                "-";
+
+            this.lbWord.Text = wordOnTop;
+
+            // Quote
+
+            var a = currentWord.ReadingMastery;
+            var b = currentWord.KanjiMastery;
+            var c = currentWord.TranslationMastery;
+
+            var quoteText = currentQuote.Text;
+            if (CurrentStudyingType == StudyingType.Kanji)
+            {
+                quoteText = QuoteKanjiToKanas(quoteText, currentWord.Kanji, currentWord.Kana);
+            }
+            else if (CurrentStudyingType == StudyingType.Translation)
+            {
+                quoteText = QuoteKanjiToNakatens(quoteText, currentWord.Kanji, currentWord.Kana);
+            }
+
+            this.lbQuote.Text = currentQuote.Character + "「" + quoteText + "」";
+
+            // Translation / definition
+
+            this.lbDefinitionOrTranslation.Text = CurrentStudyingType == StudyingType.Translation ? currentWord.Translation : "";
+
+            
+            // Update buttons
+
+            btnNext.Visible = true;
+            btnMasteryUp.Visible = btnMasteryDown.Visible = false;
+
+            // TODO better logging
+            _logger.CloseSection(_location);
+        }
+
+        private void DisplayOneAnswerWord(Domain.Word currentWord)
+        {
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            this.lbQuote.Text = currentWord.Quote.Text;
+            this.lbWord.Text = currentWord.Kanji + "【" + currentWord.Kana + "】";
+            this.lbDefinitionOrTranslation.Text = currentWord.Translation;
+
+            btnNext.Visible = false;
+            btnMasteryUp.Visible = btnMasteryDown.Visible = true;
+
+            // TODO better logging
+            _logger.CloseSection(_location);
+        }
+
+        private Step DetermineNextStep()
+        {
+            _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(_location);
+
+            Step NextStep;
+            switch (CurrentStep)
+            {
+                case Step.Initializing:
+                case Step.Answer:
+                    // either display the next word, or display the first word
+                    NextStep = Step.Question;
+                    break;
+                case Step.Question:
+                    NextStep = Step.Answer;
+                    break;
+                default:
+                    NextStep = Step.Error;
+                    break;
+            }
+            // TODO better logging
+            _logger.CloseSection(_location);
+            return NextStep;
+        }
+
+        // TODO REFACTOR THIS IS OLD CRAPPY CODE
+        private string QuoteKanjiToNakatens(string p_strQuote, string p_strKanji, string p_strKana)
+        {
+            string strReturn;
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < p_strKanji.Length; i++)
+            {
+                sb.Append("・");
+            }
+
+            if (p_strKanji != p_strKana)
+            {
+                while (p_strKanji.Substring(p_strKanji.Length - 1) ==
+                    p_strKana.Substring(p_strKana.Length - 1))
+                {
+                    p_strKanji = p_strKanji.Substring(0, p_strKanji.Length - 1);
+                    p_strKana = p_strKana.Substring(0, p_strKana.Length - 1);
+                }
+            }
+            strReturn = p_strQuote.Replace(p_strKanji, sb.ToString());
+
+            return strReturn;
+
+        }
+
+        // TODO REFACTOR THIS IS OLD CRAPPY CODE
+        private string QuoteKanjiToKanas(string p_strQuote, string p_strKanji, string p_strKana)
+        {
+            string strReturn;
+            if (p_strKanji == p_strKana)
+            {
+                strReturn = p_strQuote; // No change needed
+            }
+            else
+            {
+                while (p_strKanji.Substring(p_strKanji.Length - 1) ==
+                    p_strKana.Substring(p_strKana.Length - 1))
+                {
+                    p_strKanji = p_strKanji.Substring(0, p_strKanji.Length - 1);
+                    p_strKana = p_strKana.Substring(0, p_strKana.Length - 1);
+                }
+                strReturn = p_strQuote.Replace(p_strKanji, p_strKana);
+            }
+
+            return strReturn;
+        }
+
+        private void UpdateEveryStepLabels()
+        {
+            this.lbTotalDisplayedWords.Text = "Displayed words: " + _numberOfCurrentWords;
         }
 
         private void KillExistingPaintWindowAndStartANewOne()
@@ -130,7 +361,50 @@ namespace Nightingale.Forms
 
         private void JapaneseStudyForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            var eventLocation = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
 
+            var dialogMessage = "Save before exiting?";
+
+            if (_changesOccurred)
+            {
+                var result = MessageBox.Show(dialogMessage, "Save?", MessageBoxButtons.YesNoCancel);
+
+                _logger.Info("Result is " + result);
+
+                if (result == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+
+                    if (result == DialogResult.Yes)
+                    {
+                        using (var tx = _dbSession.BeginTransaction())
+                        {
+                            foreach (var oneWord in _wordsToStudy)
+                            {
+                                _dbSession.Save(oneWord);
+                            }
+                            tx.Commit();
+                        }
+                    }
+
+                    _dbSession.Close();
+                    _dbConnection.Close();
+
+                    _logger.CloseSection(eventLocation);
+                    _logger.CloseSection(_location);
+                }
+            }
+            else
+            {
+                _dbSession.Close();
+                _dbConnection.Close();
+
+                _logger.CloseSection(eventLocation);
+                _logger.CloseSection(_location);
+            }
         }
 
         private void LoadAllWords()
@@ -170,22 +444,55 @@ namespace Nightingale.Forms
 
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {
+            _changesOccurred = true;
 
+            if (CurrentStudyingType == StudyingType.Reading)
+            {
+                CurrentWord.ReadingMastery = (int)(CurrentWord.ReadingMastery * GlobalObjects.GoodAnswerPrct);
+                CurrentWord.ReadingMastery += GlobalObjects.GoodAnswerPoints;
+            } else if (CurrentStudyingType == StudyingType.Kanji)
+            {
+                CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.GoodAnswerPrct);
+                CurrentWord.KanjiMastery += GlobalObjects.GoodAnswerPoints;
+            } else {
+                CurrentWord.TranslationMastery = (int)(CurrentWord.TranslationMastery * GlobalObjects.GoodAnswerPrct);
+                CurrentWord.TranslationMastery += GlobalObjects.GoodAnswerPoints;
+            }
+
+            _numberOfCurrentWords += WORD_ADD_ON_UP;
+            NextStep();
         }
 
         private void btnMasteryDown_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void UpdateEveryStepLabels()
-        {
-
+            _changesOccurred = true;
+            _numberOfCurrentWords += WORD_REMOVE_ON_DOWN;
+            NextStep();
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
+            _logger.Info("User pressed Next");
+            NextStep();
+        }
 
+        private enum Step
+        {
+            Initializing,
+
+            Question,
+            Answer,
+
+            Error
+        }
+
+        private enum StudyingType
+        {
+            Reading,
+            Kanji,
+            Translation
         }
     }
+
+    
 }
