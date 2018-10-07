@@ -2,10 +2,8 @@
 {
     public enum LineTypeEnum
     {
-        Category,
-        Subcategory,
         Source,
-        Subsource,
+        Quote,
 
         Comment,
         Nothing,

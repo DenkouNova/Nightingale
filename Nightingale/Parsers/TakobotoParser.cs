@@ -92,7 +92,16 @@ namespace Nightingale.Parsers
                         break;
                     case LineTypeEnum.Source:
                         _logger.Info("Adding new source '" + contents + "'");
-                        AddNewSource(new Domain.Source(contents));
+                        var source = new Domain.Source(contents);
+                        AddNewSource(source);
+                        break;
+                    case LineTypeEnum.Quote:
+                        _logger.Info("Adding new quote '" + contents + "'");
+                        var character = contents.Substring(0, contents.IndexOf("「"));
+                        var quoteText = FeatherStrings.GetTextBetween(contents, "「", "」");
+
+                        var quote = new Domain.Quote(character, quoteText);
+                        AddNewQuote(quote);
                         break;
                         /*
                     case JapaneseParserLineType.Subsource:
@@ -191,6 +200,22 @@ namespace Nightingale.Parsers
                         return ReturnParse(LineTypeEnum.Comment, content);
                 }
             }
+
+            if (line.Contains("「") && line.Contains("」"))
+                return ReturnParse(LineTypeEnum.Quote, line);
+
+            if (lastLineType == LineTypeEnum.Quote || lastLineType == LineTypeEnum.Translation)
+                return ReturnParse(LineTypeEnum.Kanji, line);
+
+            if (lastLineType == LineTypeEnum.Kanji)
+                return ReturnParse(LineTypeEnum.Kana, line);
+
+            if (lastLineType == LineTypeEnum.Kana)
+                return ReturnParse(LineTypeEnum.Romaji, line);
+
+            if (lastLineType == LineTypeEnum.Romaji)
+                return ReturnParse(LineTypeEnum.Romaji, line);
+
 
             // temporary
             return ReturnParse(LineTypeEnum.Comment, null);

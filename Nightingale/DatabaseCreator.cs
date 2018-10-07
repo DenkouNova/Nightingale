@@ -91,6 +91,9 @@ namespace Nightingale
             
         }
 
+        // Don't have NOT NULL on the FK's.
+        // For some reason with my mapping Source ID is updated after Quote is inserted
+
         private const string CREATE_TABLE_SOURCES = @"
 CREATE TABLE Sources (
   Id INTEGER NOT NULL,

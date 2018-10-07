@@ -7,9 +7,17 @@ namespace Nightingale.Domain
 
     public class Quote
     {
-        public Quote()
+        protected Quote()
         {
             Words = new HashSet<Word>();
+        }
+
+        public Quote(string character, string text)
+        {
+            Words = new HashSet<Word>();
+
+            Character = character;
+            Text = text;
         }
 
         public virtual int Id { get; set; }
