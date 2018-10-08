@@ -140,6 +140,10 @@ namespace Nightingale
                     {
                         parser = new TakobotoParser();
                     }
+                    else if (wordStyle == "JWPCE")
+                    {
+                        parser = new JwpceParser();
+                    }
                     else
                     {
                         var errorMessage = "Word style '" + wordStyle + "' is invalid.";

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using System.Data.SQLite;
 using System.Collections.Generic;
 
 using NHibernate;
@@ -15,10 +14,7 @@ namespace Nightingale.Parsers
 {
     public class TakobotoParser : AbstractParser
     {
-        FeatherLogger _logger;
-
         private string _location; // used for ParseLine and its return
-        private string _allText;
 
         private string _kanji;
         private string _kana;
@@ -29,50 +25,7 @@ namespace Nightingale.Parsers
             _logger = GlobalObjects.Logger;
         }
 
-        public override bool ImportFile(string databasePath, string filePath)
-        {
-            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
-            _logger.OpenSection(location);
-
-            _allText = File.ReadAllText(filePath);
-
-            try
-            {
-                using (var dbConnection = new SQLiteConnection("Data Source = " + databasePath))
-                {
-                    dbConnection.Open();
-                    using (var dbSession = NHibernateHelper.GetCustomSession(dbConnection))
-                    {
-                        var allLines = _allText.Replace("\r\n", "\r").Split('\r');
-                        ParseAllLines(allLines);
-
-                        using (var transaction = dbSession.BeginTransaction())
-                        {
-                            foreach (var oneSource in SourcesToInsert)
-                            {
-                                _logger.Info("Saving source in database '" + oneSource.Text + "'...");
-                                dbSession.Save(oneSource);
-                                _logger.Info("Saved.");
-                            }
-                            transaction.Commit();
-                        }
-                        dbSession.Close();
-                    }
-                    dbConnection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.Error(ex);
-                _logger.CloseSection(location);
-                return false;
-            }
-
-            _logger.CloseSection(location);
-            return true;
-        }
-
-        private void ParseAllLines(string[] allLines)
+        protected override void ParseAllLines(string[] allLines)
         {
             string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(location);

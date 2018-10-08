@@ -11,6 +11,8 @@
         Kanji,
         Kana,
         Romaji,
-        Translation
+        Translation,
+
+        JwpceWord
     }
 }

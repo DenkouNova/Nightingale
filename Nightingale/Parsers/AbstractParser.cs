@@ -1,7 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Data.SQLite;
 using Nightingale.Domain;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Nightingale.Extensions;
 using System.Collections.Generic;
@@ -18,7 +22,50 @@ namespace Nightingale.Parsers
         private Quote _currentQuote;
         private Word _currentWord;
 
-        public abstract bool ImportFile(string databasePath, string filePath);
+        public bool ImportFile(string databasePath, string filePath)
+        {
+            string location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
+            _logger.OpenSection(location);
+
+            var allText = File.ReadAllText(filePath);
+
+            try
+            {
+                using (var dbConnection = new SQLiteConnection("Data Source = " + databasePath))
+                {
+                    dbConnection.Open();
+                    using (var dbSession = NHibernateHelper.GetCustomSession(dbConnection))
+                    {
+                        var allLines = allText.Replace("\r\n", "\r").Split('\r');
+                        ParseAllLines(allLines);
+
+                        using (var transaction = dbSession.BeginTransaction())
+                        {
+                            foreach (var oneSource in SourcesToInsert)
+                            {
+                                _logger.Info("Saving source in database '" + oneSource.Text + "'...");
+                                dbSession.Save(oneSource);
+                                _logger.Info("Saved.");
+                            }
+                            transaction.Commit();
+                        }
+                        dbSession.Close();
+                    }
+                    dbConnection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex);
+                _logger.CloseSection(location);
+                return false;
+            }
+
+            _logger.CloseSection(location);
+            return true;
+        }
+
+        protected abstract void ParseAllLines(string[] allLines);
 
         protected void AddNewSource(Source s)
         {

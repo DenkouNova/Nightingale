@@ -139,6 +139,7 @@
     <Compile Include="NHibernateHelper.cs" />
     <Compile Include="Parsers\AbstractParser.cs" />
     <Compile Include="Parsers\LineTypeEnum.cs" />
+    <Compile Include="Parsers\JwpceParser.cs" />
     <Compile Include="Parsers\TakobotoParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
