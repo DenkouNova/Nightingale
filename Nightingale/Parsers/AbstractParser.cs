@@ -16,6 +16,8 @@ namespace Nightingale.Parsers
     {
         protected FeatherLogger _logger;
 
+        protected string _location; // used for ParseLine and its return
+
         protected ISet<Source> SourcesToInsert = new HashSet<Source>();
 
         private Source _currentSource;
@@ -67,6 +69,8 @@ namespace Nightingale.Parsers
 
         protected abstract void ParseAllLines(string[] allLines);
 
+        protected abstract Tuple<LineTypeEnum, string> ParseLine(string line, LineTypeEnum lastLineType = LineTypeEnum.Nothing);
+
         protected void AddNewSource(Source s)
         {
             SourcesToInsert.Add(s);
@@ -110,6 +114,16 @@ namespace Nightingale.Parsers
                 containsAlphabetLetters = oneLine.Contains(charArray[i]);
 
             return containsAlphabetLetters;
+        }
+
+        protected Tuple<LineTypeEnum, string> ReturnParse(
+            LineTypeEnum lineType, string parsedString)
+        {
+            _logger.Info("Parsed as line type: " + lineType);
+            _logger.Info("Returned content: '" + parsedString + "'");
+            _logger.CloseSection(_location);
+
+            return new Tuple<LineTypeEnum, string>(lineType, parsedString);
         }
 
     }

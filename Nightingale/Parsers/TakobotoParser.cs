@@ -14,8 +14,6 @@ namespace Nightingale.Parsers
 {
     public class TakobotoParser : AbstractParser
     {
-        private string _location; // used for ParseLine and its return
-
         private string _kanji;
         private string _kana;
         private string _translation;
@@ -32,6 +30,8 @@ namespace Nightingale.Parsers
 
             var lastLineType = LineTypeEnum.Nothing;
 
+            Exception ex;
+
             foreach (var oneLine in allLines)
             {
                 var result = ParseLine(oneLine, lastLineType);
@@ -40,6 +40,11 @@ namespace Nightingale.Parsers
 
                 switch (lineType)
                 {
+                    case LineTypeEnum.JwpceWord:
+                        ex = new Exception("Line type '" + lineType + "' is not a valid line type for this parser.");
+                        _logger.Error(ex);
+                        throw ex;
+                        break;
                     case LineTypeEnum.Nothing:
                     case LineTypeEnum.Comment:
                     case LineTypeEnum.Romaji:
@@ -65,7 +70,7 @@ namespace Nightingale.Parsers
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Kanji is not valid. A word is currently being created. " +
+                            ex = new Exception("Kanji is not valid. A word is currently being created. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
@@ -77,7 +82,7 @@ namespace Nightingale.Parsers
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Kana is not valid. A word is currently being created. " +
+                            ex = new Exception("Kana is not valid. A word is currently being created. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
@@ -107,7 +112,7 @@ namespace Nightingale.Parsers
                             String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Translation is not valid. Must be constructing a new word. " +
+                            ex = new Exception("Translation is not valid. Must be constructing a new word. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
@@ -130,7 +135,7 @@ namespace Nightingale.Parsers
             _logger.CloseSection(location);
         }
 
-        private Tuple<LineTypeEnum, string> ParseLine(string line, LineTypeEnum lastLineType = LineTypeEnum.Nothing)
+        protected override Tuple<LineTypeEnum, string> ParseLine(string line, LineTypeEnum lastLineType = LineTypeEnum.Nothing)
         {
             _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(_location);
@@ -203,17 +208,6 @@ namespace Nightingale.Parsers
             _logger.Error(ex);
             throw ex;
         }
-
-        private Tuple<LineTypeEnum, string> ReturnParse(
-            LineTypeEnum lineType, string parsedString)
-        {
-            _logger.Info("Parsed as line type: " + lineType);
-            _logger.Info("Returned content: '" + parsedString + "'");
-            _logger.CloseSection(_location);
-
-            return new Tuple<LineTypeEnum, string>(lineType, parsedString);
-        }
-
 
 
 
