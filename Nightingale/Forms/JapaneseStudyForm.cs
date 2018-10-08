@@ -62,6 +62,8 @@ namespace Nightingale.Forms
             LoadAllWords();
             UpdateLabelsOneTimeOnly();
 
+            CreateRightClickMenus();
+
             _numberOfCurrentWords = Math.Min(_numberOfTotalWords, STARTING_NUMBER_OF_WORDS_LOADED);
 
             NextStep();
@@ -71,6 +73,21 @@ namespace Nightingale.Forms
         {
             this.lbTotalWords.Text = "Total links: " + _numberOfTotalWords;
             this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredWords;
+        }
+
+        private void CreateRightClickMenus()
+        {
+            var menuUp = new ContextMenuStrip();
+            var menuItemSuperChangeUp = new ToolStripMenuItem("↑　スーパーチェンジ　↑");
+            menuItemSuperChangeUp.Click += new EventHandler(btnSuperChange_Up);
+            menuUp.Items.AddRange(new ToolStripItem[] { menuItemSuperChangeUp });
+            this.btnMasteryUp.ContextMenuStrip = menuUp;
+
+            var menuDown = new ContextMenuStrip();
+            var menuItemSuperChangeDown = new ToolStripMenuItem("↓　スーパーチェンジ　↓");
+            menuItemSuperChangeDown.Click += new EventHandler(btnSuperChange_Down);
+            menuDown.Items.AddRange(new ToolStripItem[] { menuItemSuperChangeDown });
+            this.btnMasteryDown.ContextMenuStrip = menuDown;
         }
 
         private void NextStep()
@@ -444,29 +461,97 @@ namespace Nightingale.Forms
 
         private void btnMasteryUp_Click(object sender, EventArgs e)
         {
-            _changesOccurred = true;
+            _logger.Info("User pressed Mastery_Up");
+            UpPoints();
+            NextStep();
+        }
 
+        private void UpPoints(bool superChange = false)
+        {
+            _changesOccurred = true;
             if (CurrentStudyingType == StudyingType.Reading)
             {
                 CurrentWord.ReadingMastery = (int)(CurrentWord.ReadingMastery * GlobalObjects.GoodAnswerPrct);
                 CurrentWord.ReadingMastery += GlobalObjects.GoodAnswerPoints;
-            } else if (CurrentStudyingType == StudyingType.Kanji)
+                if (CurrentWord.ReadingMastery > 100 || superChange)
+                {
+                    CurrentWord.ReadingMastery = 100;
+                }
+            }
+            else if (CurrentStudyingType == StudyingType.Kanji)
             {
                 CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.GoodAnswerPrct);
                 CurrentWord.KanjiMastery += GlobalObjects.GoodAnswerPoints;
-            } else {
+                if (CurrentWord.KanjiMastery > 100 || superChange)
+                {
+                    CurrentWord.KanjiMastery = 100;
+                }
+            }
+            else
+            {
                 CurrentWord.TranslationMastery = (int)(CurrentWord.TranslationMastery * GlobalObjects.GoodAnswerPrct);
                 CurrentWord.TranslationMastery += GlobalObjects.GoodAnswerPoints;
+                if (CurrentWord.TranslationMastery > 100 || superChange)
+                {
+                    CurrentWord.TranslationMastery = 100;
+                }
             }
 
             _numberOfCurrentWords += WORD_ADD_ON_UP;
-            NextStep();
+        }
+
+        private void DownPoints(bool superChange = false)
+        {
+            _changesOccurred = true;
+            if (CurrentStudyingType == StudyingType.Reading)
+            {
+                CurrentWord.ReadingMastery = (int)(CurrentWord.ReadingMastery * GlobalObjects.BadAnswerPrct);
+                CurrentWord.ReadingMastery += GlobalObjects.BadAnswerPoints;
+                if (CurrentWord.ReadingMastery < 0 || superChange)
+                {
+                    CurrentWord.ReadingMastery = 0;
+                }
+            }
+            else if (CurrentStudyingType == StudyingType.Kanji)
+            {
+                CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.BadAnswerPrct);
+                CurrentWord.KanjiMastery += GlobalObjects.BadAnswerPoints;
+                if (CurrentWord.KanjiMastery < 0 || superChange)
+                {
+                    CurrentWord.KanjiMastery = 0;
+                }
+            }
+            else
+            {
+                CurrentWord.TranslationMastery = (int)(CurrentWord.TranslationMastery * GlobalObjects.BadAnswerPrct);
+                CurrentWord.TranslationMastery += GlobalObjects.BadAnswerPoints;
+                if (CurrentWord.TranslationMastery < 0 || superChange)
+                {
+                    CurrentWord.TranslationMastery = 0;
+                }
+            }
+
+            _numberOfCurrentWords += WORD_REMOVE_ON_DOWN;
         }
 
         private void btnMasteryDown_Click(object sender, EventArgs e)
         {
-            _changesOccurred = true;
-            _numberOfCurrentWords += WORD_REMOVE_ON_DOWN;
+            _logger.Info("User pressed btnMasteryDown_Click");
+            DownPoints();
+            NextStep();
+        }
+
+        private void btnSuperChange_Up(object sender, EventArgs e)
+        {
+            _logger.Info("User pressed btnSuperChange_Up");
+            UpPoints(superChange: true);
+            NextStep();
+        }
+
+        private void btnSuperChange_Down(object sender, EventArgs e)
+        {
+            _logger.Info("User pressed btnMasteryDown_Click");
+            DownPoints(superChange: true);
             NextStep();
         }
 
