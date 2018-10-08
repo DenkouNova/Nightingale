@@ -71,8 +71,8 @@ namespace Nightingale.Forms
 
         private void UpdateLabelsOneTimeOnly()
         {
-            this.lbTotalWords.Text = "Total links: " + _numberOfTotalWords;
-            this.lbNumberOfMastered.Text = "Mastered links: " + _numberOfMasteredWords;
+            this.lbTotalWords.Text = "Total words: " + _numberOfTotalWords;
+            this.lbNumberOfMastered.Text = "Mastered words: " + _numberOfMasteredWords;
         }
 
         private void CreateRightClickMenus()
@@ -141,8 +141,8 @@ namespace Nightingale.Forms
             // Colored mastery rectangle
 
             CurrentStudyingType =
-                currentWord.ReadingMastery <= 100 ? StudyingType.Reading :
-                currentWord.KanjiMastery <= 100 ? StudyingType.Kanji :
+                currentWord.ReadingMastery < 100 ? StudyingType.Reading :
+                currentWord.KanjiMastery < 100 ? StudyingType.Kanji :
                 StudyingType.Translation;
 
             /*
