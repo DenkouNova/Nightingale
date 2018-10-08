@@ -41,6 +41,30 @@ namespace Nightingale.Parsers
             _currentWord = w;
         }
 
+        protected bool LineContainsKana(string oneLine)
+        {
+            bool containsKana = false;
+            var charArray =
+                "あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわゐゑをんがぎぐげござじずぜぞだぢづでどばびぶべぼぱぴぷぺぽ"
+                .ToCharArray();
+
+            for (int i = 0; i < charArray.Length && !containsKana; i++)
+                containsKana = oneLine.Contains(charArray[i]);
+
+            return containsKana;
+        }
+
+        protected bool LineContainsAlphabetLetters(string oneLine)
+        {
+            bool containsAlphabetLetters = false;
+            var charArray = "abcdefghijklmnopqrstuvwxyz".ToCharArray();
+
+            for (int i = 0; i < charArray.Length && !containsAlphabetLetters; i++)
+                containsAlphabetLetters = oneLine.Contains(charArray[i]);
+
+            return containsAlphabetLetters;
+        }
+
     }
 
 

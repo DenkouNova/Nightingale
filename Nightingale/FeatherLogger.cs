@@ -112,9 +112,10 @@ namespace Nightingale
 
         private string ExceptionToString(Exception ex)
         {
-            string exceptionString = "Exception: '" + ex.Message + "'" +
-                ex.InnerException != null ? " Inner exception: '" + ex.InnerException.Message + "'" : "";
-            return exceptionString;
+            string exceptionString = "Exception: '" + ex.Message + "'";
+            string innerExceptionString = ex.InnerException == null ? "" : " - Inner Exception: '" + ex.InnerException.Message + "'";
+
+            return exceptionString + innerExceptionString;
         }
 
         public string Error(Exception ex)

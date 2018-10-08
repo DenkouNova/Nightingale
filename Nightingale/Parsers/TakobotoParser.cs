@@ -124,7 +124,7 @@ namespace Nightingale.Parsers
                             !String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
                         {
-                            var ex = new Exception("Kana is not valid. Must be constructing a new word. " +
+                            var ex = new Exception("Kana is not valid. A word is currently being created. " +
                             "_kanji = '" + _kanji + "', _kana = '" + _kana + "', _translation = '" + _translation + "'");
                             _logger.Error(ex);
                             throw ex;
@@ -132,6 +132,24 @@ namespace Nightingale.Parsers
                         _kana = contents;
                         break;
                     case LineTypeEnum.Translation:
+                        if (!String.IsNullOrEmpty(_kanji) ||
+                            String.IsNullOrEmpty(_kana) ||
+                            String.IsNullOrEmpty(_translation))
+                        {
+                            // e.g. "うだうだ \r\n idle, long-winded and meaningless"
+                            _logger.Info("Word is kana-only.");
+
+                            _kana = _kanji; // actually _kanji contains the kana here...
+                            _translation = contents;
+
+                            var wordKanaOnly = new Nightingale.Domain.Word(_kanji, _kana, _translation);
+                            AddNewWord(wordKanaOnly);
+
+                            // Revert to "not currently inserting a word" mode
+                            _kanji = _kana = _translation = null;
+                            break;
+                        }
+
                         if (String.IsNullOrEmpty(_kanji) ||
                             String.IsNullOrEmpty(_kana) ||
                             !String.IsNullOrEmpty(_translation))
@@ -202,7 +220,25 @@ namespace Nightingale.Parsers
                 return ReturnParse(LineTypeEnum.Kanji, line);
 
             if (lastLineType == LineTypeEnum.Kanji)
-                return ReturnParse(LineTypeEnum.Kana, line);
+            {
+                if (LineContainsKana(line))
+                {
+                    return ReturnParse(LineTypeEnum.Kana, line);
+                }
+
+                // for when a word isn't kanji-kana-romaji-translation, but only kana and translation
+                // e.g. "うだうだ \r\n idle, long-winded and meaningless"
+                if (LineContainsAlphabetLetters(line))
+                {
+                    return ReturnParse(LineTypeEnum.Translation, line);
+                }
+
+                var exInner = new Exception("Could not parse line: '" + line + "'");
+                _logger.Error(exInner);
+                throw exInner;
+            }
+
+                
 
             if (lastLineType == LineTypeEnum.Kana)
                 return ReturnParse(LineTypeEnum.Romaji, line);
