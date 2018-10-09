@@ -90,8 +90,8 @@ namespace Nightingale.Parsers
                         _kana = contents;
                         break;
                     case LineTypeEnum.Translation:
-                        if (!String.IsNullOrEmpty(_kanji) ||
-                            String.IsNullOrEmpty(_kana) ||
+                        if (!String.IsNullOrEmpty(_kanji) &&
+                            String.IsNullOrEmpty(_kana) &&
                             String.IsNullOrEmpty(_translation))
                         {
                             // e.g. "うだうだ \r\n idle, long-winded and meaningless"

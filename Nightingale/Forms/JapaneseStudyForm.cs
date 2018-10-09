@@ -174,8 +174,8 @@ namespace Nightingale.Forms
             }
 
             var mastery =
-                currentWord.ReadingMastery <= 100 ? currentWord.ReadingMastery :
-                currentWord.KanjiMastery <= 100 ? currentWord.KanjiMastery :
+                currentWord.ReadingMastery < 100 ? currentWord.ReadingMastery :
+                currentWord.KanjiMastery < 100 ? currentWord.KanjiMastery :
                 currentWord.TranslationMastery;
 
             this.lblIdMastery.Text =
@@ -473,18 +473,21 @@ namespace Nightingale.Forms
             {
                 CurrentWord.ReadingMastery = (int)(CurrentWord.ReadingMastery * GlobalObjects.GoodAnswerPrct);
                 CurrentWord.ReadingMastery += GlobalObjects.GoodAnswerPoints;
-                if (CurrentWord.ReadingMastery > 100 || superChange)
+                if (CurrentWord.ReadingMastery >= 100 || superChange)
                 {
                     CurrentWord.ReadingMastery = 100;
+                    CurrentWord.KanjiMastery = Math.Max(CurrentWord.KanjiMastery, GlobalObjects.FreePointsOnNextLevel);
                 }
+
             }
             else if (CurrentStudyingType == StudyingType.Kanji)
             {
                 CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.GoodAnswerPrct);
                 CurrentWord.KanjiMastery += GlobalObjects.GoodAnswerPoints;
-                if (CurrentWord.KanjiMastery > 100 || superChange)
+                if (CurrentWord.KanjiMastery >= 100 || superChange)
                 {
                     CurrentWord.KanjiMastery = 100;
+                    CurrentWord.TranslationMastery = Math.Max(CurrentWord.TranslationMastery, GlobalObjects.FreePointsOnNextLevel);
                 }
             }
             else
@@ -514,6 +517,11 @@ namespace Nightingale.Forms
             }
             else if (CurrentStudyingType == StudyingType.Kanji)
             {
+                if (CurrentWord.KanjiMastery <= GlobalObjects.LevelDownOnPoints) // level down
+                {
+                    CurrentWord.ReadingMastery = 90;
+                }
+
                 CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.BadAnswerPrct);
                 CurrentWord.KanjiMastery += GlobalObjects.BadAnswerPoints;
                 if (CurrentWord.KanjiMastery < 0 || superChange)
@@ -523,6 +531,11 @@ namespace Nightingale.Forms
             }
             else
             {
+                if (CurrentWord.TranslationMastery < GlobalObjects.LevelDownOnPoints) // level down
+                {
+                    CurrentWord.KanjiMastery = 90;
+                }
+
                 CurrentWord.TranslationMastery = (int)(CurrentWord.TranslationMastery * GlobalObjects.BadAnswerPrct);
                 CurrentWord.TranslationMastery += GlobalObjects.BadAnswerPoints;
                 if (CurrentWord.TranslationMastery < 0 || superChange)

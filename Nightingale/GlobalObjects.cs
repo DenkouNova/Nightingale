@@ -11,6 +11,7 @@ namespace Nightingale
         public static FeatherLoggerTraceLevel FeatherLoggerTraceLevel { get; set; }
         public static WindowsLanguage Language { get; set; }
         public static string FolderName { get; set; }
+        
 
         private static FeatherLogger _logger = null;
         public static FeatherLogger Logger
@@ -64,7 +65,9 @@ namespace Nightingale
         public static int GoodAnswerPoints { get; set; }
         public static double GoodAnswerPrct { get; set; }
         public static int BadAnswerPoints { get; set; }
-        public static double BadAnswerPrct { get; set; }       
+        public static double BadAnswerPrct { get; set; }
+        public static int FreePointsOnNextLevel { get; set; }
+        public static int LevelDownOnPoints { get; set; }
 
     }
 

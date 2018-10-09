@@ -92,6 +92,14 @@ namespace Nightingale
                         Enum.Parse(typeof(WindowsLanguage), value, true);
                     GlobalObjects.Language = ParsedValue;
                 }
+                else if (key == "FreePointsOnNextLevel")
+                {
+                    GlobalObjects.FreePointsOnNextLevel = Convert.ToInt32(value);
+                }
+                else if (key == "LevelDownOnPoints")
+                {
+                    GlobalObjects.LevelDownOnPoints = Convert.ToInt32(value);
+                }
                 else
                 {
                     throw new ArgumentOutOfRangeException("Invalid key '" + key + "' found in ini file");
