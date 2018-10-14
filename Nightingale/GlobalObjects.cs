@@ -68,6 +68,8 @@ namespace Nightingale
         public static double BadAnswerPrct { get; set; }
         public static int FreePointsOnNextLevel { get; set; }
         public static int LevelDownOnPoints { get; set; }
+        public static int PointsAfterLevelDown { get; set; }
+        public static int RandomPointsGainAfterLevelChange { get; set; }
 
     }
 

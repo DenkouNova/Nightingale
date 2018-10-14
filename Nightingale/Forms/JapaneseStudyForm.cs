@@ -232,7 +232,7 @@ namespace Nightingale.Forms
             _location = this.GetType().Name + "." + MethodBase.GetCurrentMethod().Name;
             _logger.OpenSection(_location);
 
-            this.lbQuote.Text = currentWord.Quote.Text;
+            this.lbQuote.Text = currentWord.Quote.Character + "「" + currentWord.Quote.Text + "」";
             this.lbWord.Text = currentWord.Kanji + "【" + currentWord.Kana + "】";
             this.lbDefinitionOrTranslation.Text = currentWord.Translation;
 
@@ -319,6 +319,7 @@ namespace Nightingale.Forms
         private void UpdateEveryStepLabels()
         {
             this.lbTotalDisplayedWords.Text = "Displayed words: " + _numberOfCurrentWords;
+            this.lbNumberOfMastered.Text = "Mastered words: " + _numberOfMasteredWords;
         }
 
         private void KillExistingPaintWindowAndStartANewOne()
@@ -438,17 +439,14 @@ namespace Nightingale.Forms
 
             foreach (var oneWord in allWords)
             {
-                if (oneWord.Disabled == 0 && !oneWord.IsMastered)
+                if (oneWord.IsMastered)
+                {
+                    _numberOfMasteredWords++;
+                }
+                else if (oneWord.Disabled == 0)
                 {
                     _numberOfTotalWords++;
-                    if (!oneWord.IsMastered)
-                    {
-                        _wordsToStudy.Add(oneWord);
-                    }
-                    else
-                    {
-                        _numberOfMasteredWords++;
-                    }
+                    _wordsToStudy.Add(oneWord);
                 }
             }
             _logger.CloseSection(_location);
@@ -476,7 +474,9 @@ namespace Nightingale.Forms
                 if (CurrentWord.ReadingMastery >= 100 || superChange)
                 {
                     CurrentWord.ReadingMastery = 100;
-                    CurrentWord.KanjiMastery = Math.Max(CurrentWord.KanjiMastery, GlobalObjects.FreePointsOnNextLevel);
+                    CurrentWord.KanjiMastery = Math.Max(CurrentWord.KanjiMastery,
+                        GlobalObjects.FreePointsOnNextLevel +
+                            new Random().Next(GlobalObjects.RandomPointsGainAfterLevelChange));
                 }
 
             }
@@ -487,7 +487,9 @@ namespace Nightingale.Forms
                 if (CurrentWord.KanjiMastery >= 100 || superChange)
                 {
                     CurrentWord.KanjiMastery = 100;
-                    CurrentWord.TranslationMastery = Math.Max(CurrentWord.TranslationMastery, GlobalObjects.FreePointsOnNextLevel);
+                    CurrentWord.TranslationMastery = Math.Max(CurrentWord.TranslationMastery, 
+                        GlobalObjects.FreePointsOnNextLevel +
+                            new Random().Next(GlobalObjects.RandomPointsGainAfterLevelChange));
                 }
             }
             else
@@ -497,6 +499,8 @@ namespace Nightingale.Forms
                 if (CurrentWord.TranslationMastery > 100 || superChange)
                 {
                     CurrentWord.TranslationMastery = 100;
+                    _numberOfMasteredWords++; // word is now mastered
+
                 }
             }
 
@@ -519,7 +523,8 @@ namespace Nightingale.Forms
             {
                 if (CurrentWord.KanjiMastery <= GlobalObjects.LevelDownOnPoints) // level down
                 {
-                    CurrentWord.ReadingMastery = 90;
+                    CurrentWord.ReadingMastery = GlobalObjects.PointsAfterLevelDown + 
+                        new Random().Next(GlobalObjects.RandomPointsGainAfterLevelChange);
                 }
 
                 CurrentWord.KanjiMastery = (int)(CurrentWord.KanjiMastery * GlobalObjects.BadAnswerPrct);
@@ -533,7 +538,8 @@ namespace Nightingale.Forms
             {
                 if (CurrentWord.TranslationMastery < GlobalObjects.LevelDownOnPoints) // level down
                 {
-                    CurrentWord.KanjiMastery = 90;
+                    CurrentWord.KanjiMastery = GlobalObjects.PointsAfterLevelDown +
+                        new Random().Next(GlobalObjects.RandomPointsGainAfterLevelChange);
                 }
 
                 CurrentWord.TranslationMastery = (int)(CurrentWord.TranslationMastery * GlobalObjects.BadAnswerPrct);

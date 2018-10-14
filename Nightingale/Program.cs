@@ -100,6 +100,14 @@ namespace Nightingale
                 {
                     GlobalObjects.LevelDownOnPoints = Convert.ToInt32(value);
                 }
+                else if (key == "PointsAfterLevelDown")
+                {
+                    GlobalObjects.PointsAfterLevelDown = Convert.ToInt32(value);
+                }
+                else if (key == "RandomPointsGainAfterLevelChange")
+                {
+                    GlobalObjects.RandomPointsGainAfterLevelChange = Convert.ToInt32(value);
+                }
                 else
                 {
                     throw new ArgumentOutOfRangeException("Invalid key '" + key + "' found in ini file");
