@@ -38,6 +38,7 @@ namespace Nightingale.Forms
         private int _numberOfMasteredWords;
         private int _numberOfCurrentWords;
 
+        private int wordIndex;
         private List<Domain.Word> _wordsToStudy;
 
         private Domain.Word CurrentWord;
@@ -120,8 +121,8 @@ namespace Nightingale.Forms
             do
             {
                 var maxId = Math.Min((int)_numberOfCurrentWords / 2, _wordsToStudy.Count - 1);
-                var randomWordPosition = new Random().Next(0, maxId);
-                returnedWord = _wordsToStudy[randomWordPosition];
+                wordIndex = new Random().Next(0, maxId);
+                returnedWord = _wordsToStudy[wordIndex];
             }
             while (currentWord != null && currentWord.Id == returnedWord.Id);
 
@@ -501,8 +502,14 @@ namespace Nightingale.Forms
                     CurrentWord.TranslationMastery = 100;
                     _numberOfMasteredWords++; // word is now mastered
 
+                    // _numberOfCurrentWords--; // uncomment to only remove words when mastered
+                    // _wordsToStudy.Remove(CurrentWord); // uncomment to only remove words when mastered
+
                 }
             }
+
+            _numberOfCurrentWords--; // uncomment to remove words when up-pointed
+            _wordsToStudy.Remove(CurrentWord); // uncomment to remove words when up-pointed
 
             _numberOfCurrentWords += WORD_ADD_ON_UP;
         }
