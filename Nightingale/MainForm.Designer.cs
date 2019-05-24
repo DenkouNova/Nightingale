@@ -164,12 +164,13 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.label1.Location = new System.Drawing.Point(25, 45);
+            this.label1.Location = new System.Drawing.Point(19, 45);
             this.label1.Margin = new System.Windows.Forms.Padding(3, 45, 3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(133, 254);
+            this.label1.Size = new System.Drawing.Size(139, 254);
             this.label1.TabIndex = 1;
-            this.label1.Text = "chirp chirp motherfucker! >";
+            this.label1.Text = "chirp chirp motherfucker!2 >";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel1
             // 
